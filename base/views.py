@@ -195,7 +195,9 @@ def employeeProfileView(request , pk):
         
         if 'general_information' in request.POST:
             email = request.POST.get('email')
+            
             official_email = request.POST.get('official_email')
+            
             official_email_exist = Employee.objects.filter(official_email=official_email)
             email_exist = Employee.objects.filter(email=email)
             if email_exist and email != employee.email  or official_email_exist and official_email!= employee.official_email:
@@ -209,15 +211,21 @@ def employeeProfileView(request , pk):
             employee.last_name = request.POST.get('last_name')
             employee.gender = request.POST.get('gender')
             branch_id = request.POST.get('branch')
-            print(branch_id)
+            # print(branch_id)
             branch = get_object_or_404(Branch, id=branch_id)
             print(branch)
             employee.branch = branch
             branch_code = request.POST.get('branch_code')
             code = request.POST.get('code')
             employee.employee_code = f"{branch_code}/{code}"
-            print(employee.employee_code)
-            employee.punching_code = request.POST.get('punching_code')
+            # print(employee.employee_code)
+            punching_code = request.POST.get('punching_code')
+            puncing_code_exist = Employee.objects.filter(punching_code = punching_code)
+            if punching_code != employee.punching_code and puncing_code_exist:
+                messages.error(request, "Punching code is already in use.")
+                return redirect('employee_profile', pk=employee.id)
+            else:
+                employee.punching_code = punching_code
             department_id = request.POST.get('department')
             department = get_object_or_404(Department, id=department_id)
             employee.department = department

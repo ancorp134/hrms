@@ -9,12 +9,12 @@
         {% if messages %}
         {% for message in messages %}
             {% if message.tags == 'error' %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <div class="alert bg-warning alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% else %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert bg-success alert-dismissible fade show text-white" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>

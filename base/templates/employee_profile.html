@@ -9,12 +9,12 @@
     {% if messages %}
         {% for message in messages %}
             {% if message.tags == 'error' %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <div class="alert bg-warning alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% else %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert bg-success alert-dismissible fade show text-white" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -39,14 +39,7 @@
                         <a class="nav-link" id="document-tab" data-bs-toggle="tab" href="#documents" role="tab"
                             aria-controls="document" aria-selected="false">Documents</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="appearance-tab" data-bs-toggle="tab" href="#appearance" role="tab"
-                            aria-controls="appearance" aria-selected="false">Appearance</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="attributions-tab" data-bs-toggle="tab" href="#attributions" role="tab"
-                            aria-controls="attributions" aria-selected="false">Attributions</a>
-                    </li>
+                   
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade active show" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -342,7 +335,7 @@
                                     <td>{{ document.document_type }}</td>
                                     <td>{{ document.date_of_expiry }}</td>
                                     <td>{{document.comments}}</td>
-                                    <td><a class="badge badge-primary text-primary" href="{{document.document.url}}">{{document.document}}</a></td>
+                                    <td><i class="fas fa-file-pdf"></i><a class="badge badge-primary text-primary" href="{{document.document.url}}">{{document.document}}</a></td>
                                     <td class="text-end">
                                       
                                       <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal"

@@ -21,8 +21,9 @@
     <div class="wrapper">
         <!-- sidebar navigation component -->
         <nav id="sidebar" class="active">
-            <div class="sidebar-header">
-                <img src="" alt="bootraper logo" class="app-logo">
+            <div class="sidebar-header" style="display: flex;">
+                <a href="{% url 'dashboard' %}"><img  src="{% static 'img/logo.png' %}" style="width: 37px; height: 30px;" alt="bootraper logo" class="app-logo"></a>
+                <h5 style="color: black; margin: 5px 5px;">Inductus</h5>
             </div>
             <ul class="list-unstyled components text-secondary">
                 <li>
@@ -111,7 +112,7 @@
                     <ul class="nav navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <div class="nav-dropdown mt-2">
-                                <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-link"></i>
+                                <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-link"></i>
                                     Quick Links
                                   </button>
                                   <ul class="dropdown-menu dropdown-menu-light">
