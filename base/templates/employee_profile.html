@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block start %}
+
+<div class="content">
+    <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% else %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="page-title">
+            <h3>{{ employee.user.username}}</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="general-tab" data-bs-toggle="tab" href="#general" role="tab"
+                            aria-controls="general" aria-selected="true">General</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="system-tab" data-bs-toggle="tab" href="#personal" role="tab"
+                            aria-controls="personal" aria-selected="false">Personal Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="document-tab" data-bs-toggle="tab" href="#documents" role="tab"
+                            aria-controls="document" aria-selected="false">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="appearance-tab" data-bs-toggle="tab" href="#appearance" role="tab"
+                            aria-controls="appearance" aria-selected="false">Appearance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="attributions-tab" data-bs-toggle="tab" href="#attributions" role="tab"
+                            aria-controls="attributions" aria-selected="false">Attributions</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade active show" id="general" role="tabpanel" aria-labelledby="general-tab">
+
+                        <div class="container mt-2">
+                            <form method="post" action="{% url 'employee_profile' employee.id %}">
+                                {% csrf_token %}
+                                <div class="row jumbotron box8">
+
+
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="firstname">First Name*</label>
+                                        {% if employee.first_name %}
+                                        <input type="text" class="form-control" name="first_name"
+                                            value="{{employee.first_name}}" required>
+                                        {% else %}
+                                        <input type="text" class="form-control" name="first_name"
+                                            placeholder="Enter First Name" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="middle_name">Middle Name</label>
+                                        {% if employee.middle_name %}
+                                        <input type="text" class="form-control" name="middle_name"
+                                            value="{{employee.middle_name}}">
+                                        {% else %}
+                                        <input type="text" class="form-control" name="middle_name"
+                                            placeholder="Enter Middle Name">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="last_name">Last Name*</label>
+                                        {% if employee.last_name %}
+                                        <input type="text" class="form-control" name="last_name"
+                                            value="{{employee.last_name}}" required>
+                                        {% else %}
+                                        <input type="text" class="form-control" name="last_name"
+                                            placeholder="Enter Last Name" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-5 form-group mt-2">
+                                        <label for="email">Email*</label>
+                                        {% if employee.email %}
+                                        <input type="email" class="form-control" name="email"
+                                            value="{{ employee.email }}" required>
+                                        {% else %}
+                                        <input type="email" class="form-control" name="email" placeholder="Enter Email"
+                                            required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-5 form-group mt-2">
+                                        <label for="official_email">Official Email</label>
+                                        <input type="email" class="form-control" id="official_email"
+                                            name="official_email" {% if employee.official_email %}
+                                            value="{{ employee.official_email }}" {% else %}
+                                            placeholder="Enter Official Email" {% endif %} required>
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="gender">Gender</label>
+                                        <select id="sex" name="gender" class="form-control browser-default custom-select">
+                                            <option value="Male" {% if employee.gender == 'Male' %} selected {% endif %}>Male</option>
+                                            <option value="Female" {% if employee.gender == 'Female' %} selected {% endif %}>Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="branch">Branch*</label>
+                                        <select class="form-control custom-select" name="branch">
+                                            {% for branch in branchs %}
+                                            {% if branch.id == employee.branch.id %}
+                                            <option value="{{ branch.id }}" selected>{{ branch.branch_name }}</option>
+                                            {% else %}
+                                            <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="branch_code">Branch Code*</label>
+                                        {% if emp_branch_code %}
+                                        <input type="text" name="branch_code" class="form-control" name="branch_code"
+                                            value="{{emp_branch_code}}" required>
+                                        {% else %}
+                                        <input type="text" name="branch_code" class="form-control" name="branch_code"
+                                            placeholder="Enter Branch Code" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="code"></label>
+                                        {% if emp_code %}
+                                        <input type="zip" class="form-control" name="code" value="{{ emp_code }}"
+                                            required>
+                                        {% else %}
+                                        <input type="zip" class="form-control" name="code"
+                                            value="{{ next_employee_code }}" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="puching_code">Punching Code</label>
+                                        {% if employee.punching_code %}
+                                        <input type="number" class="form-control" name="punching_code"
+                                            value="{{employee.punching_code}}" required>
+                                        {% else %}
+                                        <input type="number" class="form-control" name="punching_code" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-4 form-group mt-2">
+                                        <label for="department">Department*</label>
+                                        <select name="department" class="form-control custom-select browser-default">
+
+                                            {% for department in departments %}
+                                            {% if department.id == employee.department.id %}
+                                            <option value="{{ department.id }}" selected>{{ department.department }}
+                                            </option>
+                                            {% else %}
+                                            <option value="{{ department.id }}">{{ department.department }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4 form-group mt-2">
+                                        <label for="department">Designation*</label>
+                                        <select name="designation" class="form-control custom-select browser-default">
+
+                                            {% for designation in designations %}
+                                            {% if designation.id == employee.designation.id %}
+                                            <option value="{{ designation.id }}" selected>{{ designation.designation }}
+                                            </option>
+                                            {% else %}
+                                            <option value="{{ designation.id }}">{{ designation.designation }}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="Date">Date of Joining*</label>
+                                        {% if employee.date_of_joining %}
+                                        <input type="date" name="doj" class="form-control" id="Date"
+                                            value="{{ employee.date_of_joining | date:'Y-m-d' }}" required>
+                                        {% else %}
+                                        <input type="date" name="doj" class="form-control" id="Date" placeholder=""
+                                            required>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="employee_type">Employee Type*</label>
+                                        <select name="employee_type" class="form-control browser-default custom-select">
+                                            <option value="Permanent" {% if employee.employee_type == 'Permanent' %} selected {% endif %}>Permanent</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="shift">Shift*</label>
+                                        <select name="shift" class="form-control browser-default custom-select">
+                                            <option value="General" {% if employee.shift == 'General' %} selected {% endif %}>General</option>
+                                            <option value="UNICEF" {% if employee.shift == 'UNICEF' %} selected {% endif %}>UNICEF</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 form-group mt-2">
+                                        <label for="grade">Grade*</label>
+                                        <select name="grade" class="form-control browser-default custom-select">
+                                            <option value="Employee" {% if employee.grade == 'Employee' %} selected {% endif %}>Employee</option>
+                                            <option value="Consultant" {% if employee.grade == 'Consultant' %} selected {% endif %}>Consultant</option>
+                                            <option value="UNF Employee" {% if employee.grade == 'UNF Employee' %} selected {% endif %}>UNF Employee</option>
+                                            <option value="UNF Supervisor" {% if employee.grade == 'UNF Supervisor' %} selected {% endif %}>UNF Supervisor</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="reporting_manager">Reporting Manager*</label>
+                                        <select name="reporting_manager" class="form-control browser-default custom-select">
+                                            {% if employee.reporting_manager %}
+                                                <option value="{{ employee.reporting_manager.id }}" selected>
+                                                    {{ employee.reporting_manager.user.username }}
+                                                </option>
+                                            {% else %}
+                                                <option value="" disabled selected>Select Reporting Manager</option>
+                                            {% endif %}
+                                            {% for employee in employees_list %}
+                                               
+                                                    <option value="{{ employee.id }}">{{ employee.user.username }}</option>
+                                                
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="ctc">Enter CTC*</label>
+                                        {% if employee.ctc %}
+                                        <input type="text" class="form-control" name="ctc" value="{{employee.ctc}}" required>
+                                        {% else %}
+                                        <input type="text" class="form-control" name="ctc" placeholder="" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="gross_salary">Gross Salary*</label>
+                                        {% if employee.gross_salary %}
+                                        <input type="text" class="form-control" name="gross_salary" value="{{employee.gross_salary}}" required>
+                                        {% else %}
+                                        <input type="text" class="form-control" name="gross_salary" placeholder="" required>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-3 form-group mt-2">
+                                        <label for="basic_salary">Basic Salary*</label>
+                                        {% if employee.basic_salary %}
+                                        <input type="text" class="form-control" name="basic_salary" value="{{employee.basic_salary}}" required>
+                                        {% else %}
+                                        <input type="text" class="form-control" name="basic_salary" placeholder="" required>
+                                        {% endif %}
+                                    </div>
+                                    <button type="submit" name="general_information" class="btn btn-primary mt-2">Save</button>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="personal" role="tabpanel" aria-labelledby="general-tab">
+                        <div class="container mt-2">
+                            {% for field in form %}
+                            {% if field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% for error in field.errors %}
+                                        <small class="form-text text-muted">{{ error|escape }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row jumbotron box8">
+                                    {% for field in form %}
+                                    <div class="col-sm-4 form-group mt-2">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                    <button type="submit" name="personal_information" class="btn btn-primary mt-2">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="general-tab">
+
+                        <div class="container">
+                            {% for field in document_form %}
+                            {% if field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% for error in field.errors %}
+                                        <small class="form-text text-muted">{{ error|escape }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row jumbotron box8">
+                                    {% for field in document_form %}
+                                    <div class="col-sm-6 form-group mt-2">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                    <button type="submit" name="documents" class="btn btn-primary mt-2">Save</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="container mt-5">
+                            
+                           
+                              <table width="100%" class="table table-hover" id="dataTables-example">
+                                <thead>
+                                  <tr>
+                                    <th>Document Type</th>
+                                    <th>Date Of Expiry</th>
+                                    <th>Comments</th>
+                                    <th>Document</th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% if employee_documents %}
+                                  {% for document in employee_documents %}
+                                    
+                                  <tr>
+                                    <td>{{ document.document_type }}</td>
+                                    <td>{{ document.date_of_expiry }}</td>
+                                    <td>{{document.comments}}</td>
+                                    <td><a class="badge badge-primary text-primary" href="{{document.document.url}}">{{document.document}}</a></td>
+                                    <td class="text-end">
+                                      
+                                      <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal"
+                                        data-bs-target="#deleteDocumentModal{{document.id}}">
+                                        <i class="fas fa-trash"></i>
+                                      </a>
+                                    </td>
+                                  </tr>
+                      
+                                  <div class="modal fade" id="deleteDocumentModal{{document.id}}" tabindex="-1"
+                                    aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="deleteUserModalLabel">Confirm Document Deletion</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Are you sure you want to delete ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <form method="post" action="{% url 'delete_employee_document' document.employee.id document.id %}">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-danger" value="Delete">
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                      
+                                  {% endfor %}      
+                                  {% else %}
+                                    <td>No Documents is Found</td>
+                                  {% endif %}
+                      
+                      
+                                </tbody>
+                              </table>
+                            
+                        </div>
+                        
+                    </div>
+
+
+
+
+
+                </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    {% endblock %}

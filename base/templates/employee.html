@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block start %}
+
+<div class="content">
+  {% if messages %}
+  {% for message in messages %}
+  {% if message.tags == 'error' %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% else %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  <div class="container">
+    <div class="page-title">
+      <h3>Employees
+
+        <!-- <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">&nbsp;<i class="fas fa-user-shield"></i>Add Employee</button> -->
+      </h3>
+    </div>
+    <div class="box box-primary">
+      <div class="box-body">
+        <table width="100%" class="table table-hover" id="dataTables-example">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Employee Code</th>
+              <th>Branch</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Punching Code</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if employees %}
+            {% for employee in employees %}
+
+            <tr>
+              <td>{{employee.user.username}}</td>
+              <td>{{employee.first_name}} {{employee.last_name}}</td>
+              <td>{{employee.email}}</td>
+              <td>{{employee.employee_code}}</td>
+              <td>{{employee.branch}}</td>
+              <td>{{employee.department}}</td>
+              <td>{{employee.designation}}</td>
+              <td>{{employee.punching_code}}</td>
+              <td class="text-end">
+                <a href="{% url 'employee_profile' employee.id %}" class="btn btn-outline-info btn-rounded"><i
+                    class="fas fa-pen"></i></a>
+                <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal"
+                  data-bs-target="#deleteUserModal{{employee.id}}">
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+
+            <div class="modal fade" id="deleteUserModal{{employee.id}}" tabindex="-1"
+              aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUserModalLabel">Confirm Employee Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to delete employee <strong>{{ employee.user.username }}</strong>?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" action="{% url 'deleteemployee' employee.id %}">
+                      {% csrf_token %}
+                      <input type="submit" class="btn btn-danger" value="Delete">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
+            {% else %}
+            <tr>
+              <td>No Employee Found</td>
+            </tr>
+
+            {% endif %}
+
+
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Employee</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div> -->
+
+<!-- <div class="modal-body">
+            <div class="container mt-2">
+                <form method="post" action="{% url 'employees' %}">
+                  {% csrf_token %}
+                  <div class="row jumbotron box8">
+                    
+                    <div class="col-sm-3 form-group mt-2">
+                      <label for="username">Username*</label>
+                      <input type="text" class="form-control" name="username" placeholder="Enter Username" required>
+                    </div>
+                    <div class="col-sm-3 form-group mt-2">
+                      <label for="firstname">First Name*</label>
+                      <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" required>
+                    </div>
+                    <div class="col-sm-3 form-group mt-2">
+                      <label for="middle_name">Middle Name</label>
+                      <input type="text" class="form-control" name="middle_name"  placeholder="Enter Middle Name" >
+                    </div>
+                    <div class="col-sm-3 form-group mt-2">
+                        <label for="last_name">Last Name*</label>
+                        <input type="text" class="form-control" name="last_name"  placeholder="Enter Last Name" required>
+                      </div>
+                    <div class="col-sm-5 form-group mt-2">
+                      <label for="email">Email*</label>
+                      <input type="email" class="form-control" name="email"  placeholder="Enter Email" required>
+                    </div>
+                    <div class="col-sm-5 form-group mt-2">
+                        <label for="official_email">Official Email</label>
+                        <input type="email" class="form-control" name="official_email"  placeholder="Enter Email" required>
+                      </div>
+                      <div class="col-sm-2 form-group mt-2">
+                        <label for="gender">Gender</label>
+                        <select id="sex" name="gender" class="form-control browser-default custom-select">
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          
+                        </select>
+                      </div>
+                      <div class="col-sm-2 form-group mt-2">
+                        <label for="branch">Branch*</label>
+                        <select class="form-control custom-select browser-default" name="branch">
+                          {% for branch in branchs %}
+                          <option value="{{branch.id}}">{{branch.branch_name}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    <div class="col-sm-2 form-group mt-2">
+                      <label for="branch_code">Branch Code*</label>
+                      <input type="text" name="branch_code" class="form-control" name="branch_code" placeholder="Enter Branch Code" required>
+                    </div>
+                    <div class="col-sm-2 form-group mt-2">
+                      <label for="code"></label>
+                      <input type="zip" class="form-control" name="code" value="{{ next_employee_code }}" required>
+                    </div>
+                    <div class="col-sm-2 form-group mt-2">
+                        <label for="puching_code">Punching Code</label>
+                        <input type="number" class="form-control" name="puching_code" required>
+                      </div>
+                    <div class="col-sm-4 form-group mt-2">
+                      <label for="department">Department*</label>
+                      <select name="department" class="form-control custom-select browser-default">
+                        
+                        {% for department in departments %}
+                        <option value="{{department.id}}">{{department.department}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-sm-4 form-group mt-2">
+                        <label for="department">Designation*</label>
+                        <select name="designation" class="form-control custom-select browser-default">
+                          
+                          {% for designation in designations %}
+                          <option value="{{designation.id}}">{{designation.designation}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    <div class="col-sm-2 form-group mt-2">
+                      <label for="Date">Date of Joining*</label>
+                      <input type="date" name="doj" class="form-control" id="Date" placeholder="" required>
+                    </div>
+                    <div class="col-sm-2 form-group mt-2">
+                        <label for="employee_type">Employee Type*</label>
+                        <select name="employee_type" class="form-control browser-default custom-select">
+                          <option value="Permanent">Permanent</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-2 form-group mt-2">
+                        <label for="shift">Shift*</label>
+                        <select name="shift" class="form-control browser-default custom-select">
+                          <option value="General">General</option>
+                          <option value="UNICEF">UNICEF</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-2 form-group mt-2">
+                        <label for="grade">Grade*</label>
+                        <select name="grade" class="form-control browser-default custom-select">
+                          <option value="Employee">Employee</option>
+                          <option value="Consultant">Consultant</option>
+                          <option value="UNF Employee">UNF Employee</option>
+                          <option value="UNF Supervisor">UNF Supervisor</option>
+                        </select>
+                      </div>
+
+                      <div class="col-sm-3 form-group mt-2">
+                        <label for="reporting_manager">Reporting Manager*</label>
+                        <select name="reporting_manager" class="form-control browser-default custom-select">
+                          {% if employees %}
+                          {% for employee in employees %}
+                          <option value="{{employee.user.username}} {{employee.first_name}} {{employee.last_name}}">{{employee.user.username}} {{employee.first_name}} {{employee.last_name}}</option>   
+                          {% endfor %}
+                          {% endif %}
+                        </select>
+                      </div>
+
+                      <div class="col-sm-3 form-group mt-2">
+                        <label for="ctc">Enter CTC*</label>
+                        <input type="text" class="form-control" name="ctc"  placeholder="" required>
+                      </div>
+                      <div class="col-sm-3 form-group mt-2">
+                        <label for="gross_salary">Gross Salary*</label>
+                        <input type="text" class="form-control" name="gross_salary"  placeholder="" required>
+                      </div>
+                      <div class="col-sm-3 form-group mt-2">
+                        <label for="basic_salary">Basic Salary*</label>
+                        <input type="text" class="form-control" name="basic_salary"  placeholder="" required>
+                      </div>
+                    
+                    
+                    <div class="col-sm-6 form-group">
+                      <label for="pass">Password*</label>
+                      <input type="Password" name="password" class="form-control" id="pass" placeholder="Enter your password" required>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <label for="pass2">Confirm Password*</label>
+                      <input type="Password" name="confirm_password" class="form-control" id="pass2" placeholder="Re-enter your password" required>
+                    </div>
+                    
+              
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Employee</button>
+                  </div>
+                </form>
+              </div>
+        </div>
+        
+      </div>
+    </div>
+  </div> -->
+
+{% endblock %}

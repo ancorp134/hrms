@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block start %}
+
+<div class="content">
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% else %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="page-title">
+            <h3>Users
+
+                <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">&nbsp;<i class="fas fa-user-shield"></i>Add User</button>
+            </h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <table width="100%" class="table table-hover" id="dataTables-example">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Active</th>
+                            <th>Staff Status</th>
+                            <th>Admin Satus</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+
+                        <tr>
+                            <td>{{user.username}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.first_name}}</td>
+                            <td>{{user.last_name}}</td>
+                            <td>{{user.is_active}}</td>
+                            <td>{{user.is_staff}}</td>
+                            <td>{{user.is_superuser}}</td>
+                            <td class="text-end">
+                                <a href="" class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></a>
+                                
+                                <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{user.id}}">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <div class="modal fade" id="deleteUserModal{{user.id}}" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteUserModalLabel">Confirm User Deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete user <strong>{{ user.username }}</strong>?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form method="post" action="{% url 'deleteuser' user.id %}">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-danger" value="Delete">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add User</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+       
+        <div class="modal-body">
+            <div class="container mt-2">
+                <form method="post" action="{% url 'users' %}">
+                  {% csrf_token %}
+                  <div class="row jumbotron box8">
+                    
+                    <div class="col-sm-6 form-group">
+                      <label for="username">Username*</label>
+                      <input type="text" class="form-control" name="username" placeholder="Enter Username" required>
+                    </div>
+                    <div class="col-sm-6 form-group mt-2">
+                        <label for="email">Email*</label>
+                        <input type="email" class="form-control" name="email"  placeholder="Enter Email" required>
+                    </div>
+                    <div class="col-sm-6 form-group mt-2">
+                        <label for="firstname">First Name*</label>
+                        <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" required>
+                    </div>
+                    <div class="col-sm-6 form-group mt-2">
+                        <label for="last_name">Last Name*</label>
+                        <input type="text" class="form-control" name="last_name"  placeholder="Enter Last Name" required>
+                    </div>
+                    <div class="col-sm-6 form-group mt-2">
+                      <label for="pass">Password*</label>
+                      <input type="Password" name="password" class="form-control" id="pass" placeholder="Enter your password" required>
+                    </div>
+                    <div class="col-sm-6 form-group mt-2">
+                      <label for="pass2">Confirm Password*</label>
+                      <input type="Password" name="confirm_password" class="form-control" id="pass2" placeholder="Re-enter your password" required>
+                    </div>
+                    <div class="col-sm-4 form-group mt-2">
+                        <label for="is_active">Active</label>
+                        <input type="checkbox" class="form-check-input" name="is_active" checked>
+                    </div>
+                    <div class="col-sm-4 form-group mt-2">
+                        <label for="is_staff">Staff Status</label>
+                        <input type="checkbox" class="form-check-input" name="is_staff">
+                    </div>
+                    <div class="col-sm-4 form-group mt-2">
+                        <label for="is_superuser">Admin Status</label>
+                        <input type="checkbox" class="form-check-input" name="is_superuser">
+                    </div>
+              
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                  </div>
+                </form>
+              </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+ 
+
+{% endblock %}

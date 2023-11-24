@@ -1,0 +1,62 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login | Bootstrap Simple Admin Template</title>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/auth.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="auth-content">
+            <div class="card">
+                <div class="card-body text-center">
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% endif %}
+                    <div class="mb-4">
+                        <img class="brand" src="{% static 'img/logo.png' %}" alt="bootstraper logo"
+                            style="width: 100px;">
+                    </div>
+                    <h6 class="mb-4 text-muted">Login to your account</h6>
+                    <form action="{% url 'signin' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3 text-start">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" placeholder="Enter Username" name="username"
+                                required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Password" name="password" required>
+                        </div>
+
+                        <button class="btn btn-primary shadow-2 mb-4">Login</button>
+                    </form>
+                    <p class="mb-2 text-muted">Forgot password? <a href="forgot-password.html">Reset</a></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>
