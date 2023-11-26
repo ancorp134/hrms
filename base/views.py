@@ -220,8 +220,9 @@ def employeeProfileView(request , pk):
             employee.employee_code = f"{branch_code}/{code}"
             # print(employee.employee_code)
             punching_code = request.POST.get('punching_code')
-            puncing_code_exist = Employee.objects.filter(punching_code = punching_code)
-            if punching_code != employee.punching_code and puncing_code_exist:
+            punching_code_exist = Employee.objects.exclude(id=employee.id).filter(punching_code=punching_code)
+
+            if punching_code_exist.exists():
                 messages.error(request, "Punching code is already in use.")
                 return redirect('employee_profile', pk=employee.id)
             else:
