@@ -549,7 +549,7 @@
                                     <td>{{ document.branch_name }}</td>
                                     <td>{{ document.branch_address }}</td>
                                     <td class="{% if document.status == 'Primary' %} text-success {% else %} text-danger {% endif %} ">{{ document.status }}</td>
-                                    <td><i  class="bank_status_btn {% if document.status == 'Primary' %} fas fa-toggle-on {% else %} fas fa-toggle-off {% endif %} " style="cursor: pointer;"></i></td>
+                                    <td><i data-id="{{ document.id }}" class="bank_status_btn {% if document.status == 'Primary' %} fas fa-toggle-on {% else %} fas fa-toggle-off {% endif %} " style="cursor: pointer;"></i></td>
                                     <td class="text-end">
                                       
                                       <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal"
@@ -609,6 +609,22 @@
 
     
     <script>
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
        document.addEventListener('DOMContentLoaded', function () {
         var bankNameField = document.getElementById('id_bank_name');
         var otherBankNameField = document.getElementById('otherBankNameField');
@@ -626,6 +642,10 @@
 
         toggleBtns.forEach(function (toggleBtn) {
         toggleBtn.addEventListener('click', function () {
+            var bankId = toggleBtn.getAttribute('data-id');
+            var isPrimary = toggleBtn.classList.contains('fa-toggle-on');
+            console.log(bankId)
+            console.log(isPrimary)
         if (status === 'Primary') {
             status = 'Secondary';
             toggleBtn.classList.remove('fa-toggle-on');
@@ -635,6 +655,21 @@
             toggleBtn.classList.remove('fa-toggle-off');
             toggleBtn.classList.add('fa-toggle-on');
         }
+        var csrftoken = getCookie('csrftoken');
+        console.log(csrftoken)
+        fetch(`/update_bank_status/${bankId}`, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ is_primary: !isPrimary }), // Sending opposite status
+            }).then(response => {
+                // Handle response or errors if needed
+            }).catch(error => {
+                console.error('Error:', error);
+            });
     });
 });
     });

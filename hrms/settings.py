@@ -148,3 +148,6 @@ JAZZMIN_SETTINGS = {
     # - carousel
     
 }
+
+APPEND_SLASH = False
+

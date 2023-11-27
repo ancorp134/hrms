@@ -19,8 +19,8 @@ urlpatterns = [
     path('users/<int:pk>/edit',views.editUserView,name='edituser'),
     path('users/<int:pk>/delete',views.deleteUser,name='deleteuser'),
     path('employees/<str:pk>/profile',views.employeeProfileView, name='employee_profile'),
-     path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteDocument, name='delete_document'),
-
+    path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteDocument, name='delete_document'),
+    path('update_bank_status/<str:bank_id>/', views.update_bank_status, name='update_bank_status'),
 ]
 
 

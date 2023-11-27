@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from datetime import datetime
 from .forms import PersonalInformationForm,DocumentForm,ImmigrationForm,BankForm
+from django.http import JsonResponse
 
 
 
@@ -389,6 +390,24 @@ def employeeProfileView(request , pk):
     }
     return render(request,'employee_profile.html',context)
 
+@login_required(login_url='signin')
+def update_bank_status(request, bank_id):
+    print("hello")
+    if request.method == 'POST':
+        is_primary = request.POST.get('is_primary')
+        
+        print("hello")
+        bank_record = BankDetails.objects.get(id=bank_id)
+
+        bank_record.status = 'Primary' if is_primary else 'Secondary'
+        bank_record.save()
+
+        if is_primary:
+            BankDetails.objects.filter(employee=bank_record.employee).exclude(id=bank_id).update(status='Secondary')
+
+        return JsonResponse({'message': 'Status updated successfully'}, status=200)
+
+    return JsonResponse({'error': 'Invalid'}, status=400)
 
 
 
