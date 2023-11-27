@@ -16,9 +16,10 @@ urlpatterns = [
     path('employees/',views.EmployeeView,name='employees'),
     path('employees/<str:pk>/delete',views.deleteEmployee,name='deleteemployee'),
     path('users/',views.UserView,name='users'),
+    path('users/<int:pk>/edit',views.editUserView,name='edituser'),
     path('users/<int:pk>/delete',views.deleteUser,name='deleteuser'),
     path('employees/<str:pk>/profile',views.employeeProfileView, name='employee_profile'),
-     path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteEmployeeDocument, name='delete_employee_document'),
+     path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteDocument, name='delete_document'),
 
 ]
 

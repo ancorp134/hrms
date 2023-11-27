@@ -1,8 +1,38 @@
 from django import forms
-from .models import PersonalInformation,Employee,RequiredDocument
+from .models import PersonalInformation,Employee,RequiredDocument,Immigration,BankDetails
 import string
 from django.forms import DateInput,FileInput
 
+
+class BankForm(forms.ModelForm):
+    class Meta:
+        model = BankDetails
+        exclude = ('employee',)
+        fields = '__all__'
+        widgets = {
+            'bank_name': forms.Select(choices=BankDetails.BANK_CHOICES, attrs={'class': 'form-control','id' : 'id_bank_name'}),
+            'account_holder_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'account_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'IFSC_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'branch_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'branch_address': forms.TextInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(choices=BankDetails.BANK_STATUS, attrs={'class': 'form-control'}),
+        }
+
+class ImmigrationForm(forms.ModelForm):
+    class Meta:
+        model = Immigration
+        exclude = ('employee',)
+        fields = '__all__'
+        widgets = {
+            'document_type': forms.Select(choices=Immigration.IMMI_CHOICES, attrs={'class': 'form-control'}),
+            'passport_or_visa_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'issue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_of_expiry': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'citizenship': forms.Select(attrs={'class': 'form-control'}),
+            'comments': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
+            'document': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
 
 class DocumentForm(forms.ModelForm):

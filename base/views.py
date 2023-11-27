@@ -1,5 +1,5 @@
 
-from .models import PersonalInformation,Employee,Branch,Department,Designation,RequiredDocument
+from .models import PersonalInformation,Employee,Branch,Department,Designation,RequiredDocument,Immigration,BankDetails
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.shortcuts import render,redirect,get_object_or_404
@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from datetime import datetime
-from .forms import PersonalInformationForm,DocumentForm
+from .forms import PersonalInformationForm,DocumentForm,ImmigrationForm,BankForm
 
 
 
@@ -131,6 +131,48 @@ def UserView(request):
     return render(request , 'users.html' , context)
 
 
+@login_required(login_url='signin')
+def editUserView(request,pk):
+    user = User.objects.get(id=pk)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        is_active = request.POST.get('is_active') == 'on'
+        is_staff = request.POST.get('is_staff') == 'on'
+        is_superuser = request.POST.get('is_superuser') == 'on'
+
+        try:
+            existing_user = User.objects.exclude(id=user.id).filter(username=username).exists()
+            if existing_user:
+                messages.error(request, "Username already exists. Please choose a different username.")
+                return redirect('edit_user', user_id=user.id)
+
+            existing_email = User.objects.exclude(id=user.id).filter(email=email).exists()
+            if existing_email:
+                messages.error(request, "Email already exists. Please choose a different email.")
+                return redirect('edit_user', user_id=user.id)
+        
+            user.username = username
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.is_active = is_active
+            user.is_staff = is_staff
+            user.is_superuser = is_superuser
+            user.save()
+
+            messages.success(request, "User updated successfully.")
+            return redirect('users')
+
+        except Exception as e:
+            messages.error(request, f"Error updating user: {e}")
+            return redirect('edit_user', user_id=user.id)
+
+    context = {'user': user}
+    return render(request, 'users.html', context)
+
 
 @login_required(login_url='signin')
 def deleteUser(request,pk):
@@ -156,13 +198,21 @@ def deleteEmployee(request,pk):
 
 
 @login_required(login_url='signin')
-def deleteEmployeeDocument(request,pk1,pk2):
+def deleteDocument(request,pk1,pk2):
     if request.method == 'POST':
-        document = RequiredDocument.objects.get(id=pk2)
-        if document:
-            document.delete()
-            messages.success(request,"Document deleted successfully..")
-            return redirect("employee_profile",pk=pk1)
+        if 'required_documents' in request.POST:
+            document = RequiredDocument.objects.get(id=pk2)
+            if document:
+                document.delete()
+                messages.success(request,"Document deleted successfully..")
+                return redirect("employee_profile",pk=pk1)
+            
+        if 'immigration_documents' in request.POST:
+            document = Immigration.objects.get(id=pk2)
+            if document:
+                document.delete()
+                messages.success(request,"Document deleted successfully..")
+                return redirect("employee_profile",pk=pk1)
     return render(request,'employee_profile.html')
 
 
@@ -170,6 +220,8 @@ def deleteEmployeeDocument(request,pk1,pk2):
 @login_required(login_url='signin')
 def employeeProfileView(request , pk):
     employee = Employee.objects.get(id = pk)
+    immigration_form = None
+    bank_form = None
     document_form=None
     form = None
     emp_code = None
@@ -260,6 +312,33 @@ def employeeProfileView(request , pk):
                 return redirect('employee_profile',pk=employee.id)
             else:
                 messages.error(request,"Something went wrong....")
+        
+        if 'immigration' in request.POST:
+
+            immigration_form = ImmigrationForm(request.POST, request.FILES)
+            if immigration_form.is_valid():
+                document = immigration_form.save(commit=False)
+                document.employee = employee
+                immigration_form.save()
+                messages.success(request,"Immigration details added successfully..")
+                return redirect('employee_profile',pk=employee.id)
+            else:
+                messages.error(request,"Something went wrong....")
+        
+        if 'bank_details' in request.POST:
+
+            bank_form = BankForm(request.POST)
+            other_bank_name = request.POST.get('other_bank_name')
+            if bank_form.is_valid():
+                document = bank_form.save(commit=False)
+                if document.bank_name == "Other":
+                    document.bank_name = other_bank_name
+                document.employee = employee
+                bank_form.save()
+                messages.success(request,"Immigration details added successfully..")
+                return redirect('employee_profile',pk=employee.id)
+            else:
+                messages.error(request,"Something went wrong....")
 
     employees_list = Employee.objects.all()
     branchs = Branch.objects.all()
@@ -273,8 +352,12 @@ def employeeProfileView(request , pk):
     if request.method == 'GET':
         personal_info, created = PersonalInformation.objects.get_or_create(employee=employee)
         employee_documents= RequiredDocument.objects.filter(employee=employee)
+        immigration_documents = Immigration.objects.filter(employee=employee)
+        bank_records = BankDetails.objects.filter(employee=employee)
         form = PersonalInformationForm(instance=personal_info)
         document_form = DocumentForm()
+        immigration_form = ImmigrationForm()
+        bank_form = BankForm()
         try:
             # Get the last employee code and extract numeric part for increment
             last_employee = Employee.objects.order_by('-employee_code').first()
@@ -298,7 +381,11 @@ def employeeProfileView(request , pk):
         'employees_list' : employees_list,
         'form' : form,
         'document_form' : document_form,
-        'employee_documents' : employee_documents
+        'immigration_form' : immigration_form,
+        'employee_documents' : employee_documents,
+        'immigration_documents': immigration_documents,
+        'bank_form' : bank_form,
+        'bank_records' : bank_records,
     }
     return render(request,'employee_profile.html',context)
 

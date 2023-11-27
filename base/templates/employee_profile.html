@@ -37,9 +37,16 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="document-tab" data-bs-toggle="tab" href="#documents" role="tab"
-                            aria-controls="document" aria-selected="false">Documents</a>
+                            aria-controls="document" aria-selected="false">Attachments</a>
                     </li>
-                   
+                    <li class="nav-item">
+                        <a class="nav-link" id="immigration-tab" data-bs-toggle="tab" href="#immigration" role="tab"
+                            aria-controls="immigration" aria-selected="false">Immigration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="bank-tab" data-bs-toggle="tab" href="#bank_details" role="tab"
+                            aria-controls="bank" aria-selected="false">Bank Details</a>
+                    </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade active show" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -358,9 +365,216 @@
                                         </div>
                                         <div class="modal-footer">
                                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                          <form method="post" action="{% url 'delete_employee_document' document.employee.id document.id %}">
+                                          <form method="post" action="{% url 'delete_document' document.employee.id document.id %}">
                                             {% csrf_token %}
-                                            <input type="submit" class="btn btn-danger" value="Delete">
+                                            <input type="submit" name="required_documents" class="btn btn-danger" value="Delete">
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                      
+                                  {% endfor %}      
+                                  {% else %}
+                                    <td>No Documents is Found</td>
+                                  {% endif %}
+                      
+                      
+                                </tbody>
+                              </table>
+                            
+                        </div>
+                        
+                    </div>
+
+
+                    <div class="tab-pane fade" id="immigration" role="tabpanel" aria-labelledby="general-tab">
+
+                        <div class="container">
+                            {% for field in immigration_form %}
+                            {% if field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% for error in field.errors %}
+                                        <small class="form-text text-muted">{{ error|escape }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row jumbotron box8">
+                                    {% for field in immigration_form %}
+                                    <div class="col-sm-6 form-group mt-2">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                    <button type="submit" name="immigration" class="btn btn-primary mt-2">Save</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="container mt-5">
+                            
+                           
+                              <table width="100%" class="table table-hover" id="dataTables-example">
+                                <thead>
+                                  <tr>
+                                    <th>Document Type</th>
+                                    <th>Passport/Visa No</th>
+                                    <th>Date Of Issue</th>
+                                    <th>Date Of Expiry</th>
+                                    <th>Comments</th>
+                                    <th>Attached Document</th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% if immigration_documents %}
+                                  {% for document in immigration_documents %}
+                                    
+                                  <tr>
+                                    <td>{{ document.document_type }}</td>
+                                    <td>{{ document.passport_or_visa_no }}</td>
+                                    <td>{{ document.issue_date }}</td>
+                                    <td>{{ document.date_of_expiry }}</td>
+                                    <td>{{ document.comments }}</td>
+                                    <td><i class="fas fa-file-pdf"></i><a class="badge badge-primary text-primary" href="{{document.document.url}}">{{document.document}}</a></td>
+                                    <td class="text-end">
+                                      
+                                      <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal"
+                                        data-bs-target="#deleteDocumentModal{{document.id}}">
+                                        <i class="fas fa-trash"></i>
+                                      </a>
+                                    </td>
+                                  </tr>
+                      
+                                  <div class="modal fade" id="deleteDocumentModal{{document.id}}" tabindex="-1"
+                                    aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="deleteUserModalLabel">Confirm Document Deletion</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Are you sure you want to delete ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <form method="post" action="{% url 'delete_document' document.employee.id document.id %}">
+                                            {% csrf_token %}
+                                            <input type="submit" name="immigration_documents" class="btn btn-danger" value="Delete">
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                      
+                                  {% endfor %}      
+                                  {% else %}
+                                    <td>No Documents is Found</td>
+                                  {% endif %}
+                      
+                      
+                                </tbody>
+                              </table>
+                            
+                        </div>
+                        
+                    </div>
+
+
+                    <div class="tab-pane fade" id="bank_details" role="tabpanel" aria-labelledby="general-tab">
+
+                        <div class="container">
+                            {% for field in bank_form %}
+                            {% if field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% for error in field.errors %}
+                                        <small class="form-text text-muted">{{ error|escape }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row jumbotron box8">
+                                    {% for field in bank_form %}
+                                    <div class="col-sm-6 form-group mt-2">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                    <div class="col-sm-6 form-group mt-2" id="otherBankNameField" style="display: none;">
+                                        <label for="id_bank_name_other">Other Bank Name</label>
+                                        <input type="text" class="form-control" id="id_bank_name_other" name="bank_name_other">
+                                    </div>
+                                    <button type="submit" name="bank_details" class="btn btn-primary mt-2">Save</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="container mt-5">
+                            
+                           
+                              <table width="100%" class="table table-hover" id="dataTables-example">
+                                <thead>
+                                  <tr>
+                                    <th>Bank Name</th>
+                                    <th>Account Holder Name</th>
+                                    <th>Account Number</th>
+                                    <th>IFSC Code</th>
+                                    <th>Branch Name</th>
+                                    <th>Branch Address</th>
+                                    <th>Satus</th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% if bank_records %}
+                                  {% for document in bank_records %}
+                                    
+                                  <tr>
+                                    <td>{{ document.bank_name }}</td>
+                                    <td>{{ document.account_holder_name }}</td>
+                                    <td>{{ document.account_number }}</td>
+                                    <td>{{ document.IFSC_code }}</td>
+                                    <td>{{ document.branch_name }}</td>
+                                    <td>{{ document.branch_address }}</td>
+                                    <td class="{% if document.status == 'Primary' %} text-success {% else %} text-danger {% endif %} ">{{ document.status }}</td>
+                                    <td><i  class="bank_status_btn {% if document.status == 'Primary' %} fas fa-toggle-on {% else %} fas fa-toggle-off {% endif %} " style="cursor: pointer;"></i></td>
+                                    <td class="text-end">
+                                      
+                                      <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal"
+                                        data-bs-target="#deleteDocumentModal{{document.id}}">
+                                        <i class="fas fa-trash"></i>
+                                      </a>
+                                    </td>
+                                  </tr>
+                      
+                                  <div class="modal fade" id="deleteDocumentModal{{document.id}}" tabindex="-1"
+                                    aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="deleteUserModalLabel">Confirm Document Deletion</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Are you sure you want to delete ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <form method="post" action="{% url 'delete_document' document.employee.id document.id %}">
+                                            {% csrf_token %}
+                                            <input type="submit"  class="btn btn-danger" value="Delete">
                                           </form>
                                         </div>
                                       </div>
@@ -393,7 +607,38 @@
     </div>
 
 
+    
+    <script>
+       document.addEventListener('DOMContentLoaded', function () {
+        var bankNameField = document.getElementById('id_bank_name');
+        var otherBankNameField = document.getElementById('otherBankNameField');
+        var toggleBtns= document.querySelectorAll('.bank_status_btn')
+        var status = 'Primary';
 
+        bankNameField.addEventListener('change', function () {
+            var selectedBank = this.value;
+            if (selectedBank === 'Other') {
+                otherBankNameField.style.display = 'block';
+            } else {
+                otherBankNameField.style.display = 'none';
+            }
+        });
+
+        toggleBtns.forEach(function (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+        if (status === 'Primary') {
+            status = 'Secondary';
+            toggleBtn.classList.remove('fa-toggle-on');
+            toggleBtn.classList.add('fa-toggle-off');
+        } else {
+            status = 'Primary';
+            toggleBtn.classList.remove('fa-toggle-off');
+            toggleBtn.classList.add('fa-toggle-on');
+        }
+    });
+});
+    });
+    </script>
 
 
     {% endblock %}

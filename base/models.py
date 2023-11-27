@@ -4,6 +4,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import nanoid
 import os
+from django_countries.fields import CountryField
+from django.core.validators import RegexValidator
+
 
 
 def generate_unique_id():
@@ -101,8 +104,12 @@ class Employee(models.Model):
         return self.user.username
     
 
+
+    
+
 class PersonalInformation(models.Model):
-    STATE_CHOICES = [
+
+    STATE_CHOICES = (
         ('Andaman and Nicobar Islands', 'Andaman and Nicobar Islands'),
         ('Andhra Pradesh', 'Andhra Pradesh'),
         ('Arunachal Pradesh', 'Arunachal Pradesh'),
@@ -139,7 +146,8 @@ class PersonalInformation(models.Model):
         ('Uttar Pradesh', 'Uttar Pradesh'),
         ('Uttarakhand', 'Uttarakhand'),
         ('West Bengal', 'West Bengal'),
-    ]
+)
+    
     BLOOD_GROUP_CHOICES = (
         ('A+', 'A+'),
         ('A-', 'A-'),
@@ -200,7 +208,53 @@ class RequiredDocument(models.Model):
     
 
 
+class Immigration(models.Model):
+    IMMI_CHOICES = (
+        ('Passport' , 'Passport'),
+        ('Visa' , 'Visa'),
+    )
+    id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE,editable=False)
+    document_type = models.CharField(max_length=100,choices=IMMI_CHOICES,blank=True,null=True)
+    passport_or_visa_no = models.CharField(max_length=50)
+    issue_date = models.DateField()
+    date_of_expiry = models.DateField()
+    citizenship = CountryField(blank_label="(select country)")
+    comments = models.CharField(max_length=100,null=True,blank=True) 
+    document = models.FileField(upload_to=get_upload_path)
 
+    def __str__(self):
+        return self.employee.user.username
+    
+class BankDetails(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE) 
+    id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
+    BANK_CHOICES = (
+        ('HDFC', 'HDFC Bank'),
+        ('ICICI', 'ICICI Bank'),
+        ('SBI', 'State Bank of India'),
+        ('Axis', 'Axis Bank'),
+        ('Kotak', 'Kotak Mahindra Bank'),
+        ('BOB', 'Bank of Baroda'),
+        ('PNB', 'Punjab National Bank'),
+        ('Other' , 'Other')
+    )
+    BANK_STATUS = (
+        ('Primary' , 'Primary'),
+        ('Secondary' , 'Secondary')
+    )
+    bank_name = models.CharField(max_length=100, choices=BANK_CHOICES)
+    account_holder_name = models.CharField(max_length=255)
+    account_number = models.CharField(max_length=50)
+    IFSC_regex = RegexValidator(regex=r'^[A-Za-z]{4}\d{7}$', message="IFSC code must be in valid format.")
+    IFSC_code = models.CharField(max_length=11, validators=[IFSC_regex])
+    branch_name = models.CharField(max_length=255)
+    branch_address = models.CharField(max_length=255)
+    status = models.CharField(max_length=50,choices=BANK_STATUS)
+    
+    
+    def __str__(self):
+        return f"{self.employee}'s Bank Details"
 
     
 @receiver(post_save, sender=User)

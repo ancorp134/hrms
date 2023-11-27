@@ -55,13 +55,88 @@
                             <td>{{user.is_staff}}</td>
                             <td>{{user.is_superuser}}</td>
                             <td class="text-end">
-                                <a href="" class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></a>
+                                <a href="" class="btn btn-outline-info btn-rounded" data-bs-toggle="modal" data-bs-target="#editUserModal{{user.id}}" ><i class="fas fa-pen"></i></a>
                                 
                                 <a class="btn btn-outline-danger btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{user.id}}">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
                         </tr>
+
+
+                        <div class="modal fade" id="editUserModal{{user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel"> Edit {{user.username}}</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                               
+                                <div class="modal-body">
+                                    <div class="container mt-2">
+                                        <form method="post" action="{% url 'edituser' user.id %}">
+                                          {% csrf_token %}
+                                          <div class="row jumbotron box8">
+                                            
+                                            <div class="col-sm-6 form-group mt-2">
+                                              <label for="username">Username*</label>
+                                              {% if user.username %}
+                                              <input type="text" class="form-control" name="username" value="{{user.username}}" required>
+                                              {% else %}
+                                              <input type="text" class="form-control" name="username" placeholder="Enter Username" required>
+                                              {% endif %}
+                                            </div>
+                                            <div class="col-sm-6 form-group mt-2">
+                                                <label for="email">Email*</label>
+                                               {% if user.email %}
+                                               <input type="email" class="form-control" name="email" value="{{user.email}}" required>
+                                               {% else %}
+                                               <input type="email" class="form-control" name="email"  placeholder="Enter Email" required>
+                                               {% endif %}
+                                            </div>
+                                            <div class="col-sm-6 form-group mt-2">
+                                                <label for="firstname">First Name*</label>
+                                                {% if user.first_name %}
+                                                <input type="text" class="form-control" name="first_name" value="{{user.first_name}}" required>
+                                                {% else %}
+                                                <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" required>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-sm-6 form-group mt-2">
+                                                <label for="last_name">Last Name*</label>
+                                                {% if user.last_name %}
+                                                <input type="text" class="form-control" name="last_name" value="{{user.last_name}}" required>
+                                                {% else %}
+                                                <input type="text" class="form-control" name="last_name"  placeholder="Enter Last Name" required>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <div class="col-sm-4 form-group mt-2">
+                                                <label for="is_active">Active</label>
+                                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="is_active" {% if user.is_active %} checked {% endif %}>
+                                            </div>
+                                            <div class="col-sm-4 form-group mt-2">
+                                                <label for="is_staff">Staff Status</label>
+                                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="is_staff" {% if user.is_staff %} checked {% endif %}>
+                                            </div>
+                                            <div class="col-sm-4 form-group mt-2">
+                                                <label for="is_superuser">Admin Status</label>
+                                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="is_superuser" {% if user.is_superuser %} checked {% endif %}>
+                                            </div>
+                                      
+                                          </div>
+                        
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                </div>
+                                
+                              </div>
+                            </div>
+                          </div>
 
                         <div class="modal fade" id="deleteUserModal{{user.id}}" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -133,15 +208,15 @@
                     </div>
                     <div class="col-sm-4 form-group mt-2">
                         <label for="is_active">Active</label>
-                        <input type="checkbox" class="form-check-input" name="is_active" checked>
+                        <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="is_active" checked>
                     </div>
                     <div class="col-sm-4 form-group mt-2">
                         <label for="is_staff">Staff Status</label>
-                        <input type="checkbox" class="form-check-input" name="is_staff">
+                        <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="is_staff">
                     </div>
                     <div class="col-sm-4 form-group mt-2">
                         <label for="is_superuser">Admin Status</label>
-                        <input type="checkbox" class="form-check-input" name="is_superuser">
+                        <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="is_superuser">
                     </div>
               
                   </div>
@@ -158,6 +233,6 @@
     </div>
   </div>
 
- 
+
 
 {% endblock %}
