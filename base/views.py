@@ -214,6 +214,14 @@ def deleteDocument(request,pk1,pk2):
                 document.delete()
                 messages.success(request,"Document deleted successfully..")
                 return redirect("employee_profile",pk=pk1)
+            
+        if 'bank_record' in request.POST:
+            document = BankDetails.objects.get(id=pk2)
+            if document:
+                document.delete()
+                messages.success(request,"Bank details deleted successfully..")
+                return redirect("employee_profile",pk=pk1)
+            
     return render(request,'employee_profile.html')
 
 
@@ -329,14 +337,15 @@ def employeeProfileView(request , pk):
         if 'bank_details' in request.POST:
 
             bank_form = BankForm(request.POST)
-            other_bank_name = request.POST.get('other_bank_name')
+            other_bank_name = request.POST.get('bank_name_other')
+            print(other_bank_name)
             if bank_form.is_valid():
                 document = bank_form.save(commit=False)
                 if document.bank_name == "Other":
                     document.bank_name = other_bank_name
                 document.employee = employee
                 bank_form.save()
-                messages.success(request,"Immigration details added successfully..")
+                messages.success(request,"Bank details added successfully..")
                 return redirect('employee_profile',pk=employee.id)
             else:
                 messages.error(request,"Something went wrong....")
@@ -390,24 +399,6 @@ def employeeProfileView(request , pk):
     }
     return render(request,'employee_profile.html',context)
 
-@login_required(login_url='signin')
-def update_bank_status(request, bank_id):
-    print("hello")
-    if request.method == 'POST':
-        is_primary = request.POST.get('is_primary')
-        
-        print("hello")
-        bank_record = BankDetails.objects.get(id=bank_id)
-
-        bank_record.status = 'Primary' if is_primary else 'Secondary'
-        bank_record.save()
-
-        if is_primary:
-            BankDetails.objects.filter(employee=bank_record.employee).exclude(id=bank_id).update(status='Secondary')
-
-        return JsonResponse({'message': 'Status updated successfully'}, status=200)
-
-    return JsonResponse({'error': 'Invalid'}, status=400)
 
 
 

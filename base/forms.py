@@ -16,7 +16,7 @@ class BankForm(forms.ModelForm):
             'IFSC_code': forms.TextInput(attrs={'class': 'form-control'}),
             'branch_name': forms.TextInput(attrs={'class': 'form-control'}),
             'branch_address': forms.TextInput(attrs={'class': 'form-control'}),
-            'status': forms.Select(choices=BankDetails.BANK_STATUS, attrs={'class': 'form-control'}),
+          
         }
 
 class ImmigrationForm(forms.ModelForm):

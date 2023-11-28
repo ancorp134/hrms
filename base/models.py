@@ -239,10 +239,7 @@ class BankDetails(models.Model):
         ('PNB', 'Punjab National Bank'),
         ('Other' , 'Other')
     )
-    BANK_STATUS = (
-        ('Primary' , 'Primary'),
-        ('Secondary' , 'Secondary')
-    )
+   
     bank_name = models.CharField(max_length=100, choices=BANK_CHOICES)
     account_holder_name = models.CharField(max_length=255)
     account_number = models.CharField(max_length=50)
@@ -250,7 +247,7 @@ class BankDetails(models.Model):
     IFSC_code = models.CharField(max_length=11, validators=[IFSC_regex])
     branch_name = models.CharField(max_length=255)
     branch_address = models.CharField(max_length=255)
-    status = models.CharField(max_length=50,choices=BANK_STATUS)
+    
     
     
     def __str__(self):

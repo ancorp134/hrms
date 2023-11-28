@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from base import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -20,9 +20,9 @@ urlpatterns = [
     path('users/<int:pk>/delete',views.deleteUser,name='deleteuser'),
     path('employees/<str:pk>/profile',views.employeeProfileView, name='employee_profile'),
     path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteDocument, name='delete_document'),
-    path('update_bank_status/<str:bank_id>/', views.update_bank_status, name='update_bank_status'),
+    path('api/',include('api.urls')),
+   
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
