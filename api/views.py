@@ -17,6 +17,11 @@ class EmployeeInfo(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        employee = Employee.objects.get(user=request.user)  
-        serializer = EmployeeProfileSerializer(employee)
-        return Response(serializer.data)
+        employee = Employee.objects.get(user=request.user)
+        bank_details = BankDetails.objects.filter(employee=employee)
+        bank_data = BankDetailsSerializer(bank_details,many=True)  
+        serializer = EmployeeSerializer(employee)
+        return Response({
+            "employee": serializer.data,
+            "bank_details": bank_data.data  # accessing the serialized data
+        })

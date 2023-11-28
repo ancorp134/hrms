@@ -21,7 +21,12 @@ class EmployeeLoginSerializer(serializers.Serializer):
         raise serializers.ValidationError('Invalid credentials')
 
 
-class EmployeeProfileSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
+        fields = '__all__'
+
+class BankDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankDetails
         fields = '__all__'
