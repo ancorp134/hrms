@@ -6,6 +6,7 @@ import nanoid
 import os
 from django_countries.fields import CountryField
 from django.core.validators import RegexValidator
+from .constants import STATE_CHOICES
 
 
 
@@ -20,7 +21,14 @@ def get_upload_path(instance,filename):
 class Branch(models.Model):
     id = models.CharField(default=generate_unique_id,primary_key=True,editable=False,max_length=25)
     branch_name = models.CharField(max_length=100,unique=True)
-    slug = models.CharField(max_length=100)
+    branch_code = models.CharField(max_length=100,unique=True)
+    address = models.CharField(max_length=200,blank=True,null=True)
+    tehsil = models.CharField(max_length=100,blank=True,null=True)
+    district = models.CharField(max_length=100,blank=True,null=True)
+    city = models.CharField(max_length=50,blank=True,null=True)
+    state = models.CharField(max_length=50,choices=STATE_CHOICES,blank=True,null=True)
+    country = CountryField(blank_label="(select country)")
+    status = models.BooleanField()
 
     def __str__(self):
         return self.branch_name
@@ -109,45 +117,6 @@ class Employee(models.Model):
 
 class PersonalInformation(models.Model):
 
-    STATE_CHOICES = (
-        ('Andaman and Nicobar Islands', 'Andaman and Nicobar Islands'),
-        ('Andhra Pradesh', 'Andhra Pradesh'),
-        ('Arunachal Pradesh', 'Arunachal Pradesh'),
-        ('Assam', 'Assam'),
-        ('Bihar', 'Bihar'),
-        ('Chandigarh', 'Chandigarh'),
-        ('Chhattisgarh', 'Chhattisgarh'),
-        ('Dadra and Nagar Haveli', 'Dadra and Nagar Haveli'),
-        ('Daman and Diu', 'Daman and Diu'),
-        ('Delhi', 'Delhi'),
-        ('Goa', 'Goa'),
-        ('Gujarat', 'Gujarat'),
-        ('Haryana', 'Haryana'),
-        ('Himachal Pradesh', 'Himachal Pradesh'),
-        ('Jammu and Kashmir', 'Jammu and Kashmir'),
-        ('Jharkhand', 'Jharkhand'),
-        ('Karnataka', 'Karnataka'),
-        ('Kerala', 'Kerala'),
-        ('Lakshadweep', 'Lakshadweep'),
-        ('Madhya Pradesh', 'Madhya Pradesh'),
-        ('Maharashtra', 'Maharashtra'),
-        ('Manipur', 'Manipur'),
-        ('Meghalaya', 'Meghalaya'),
-        ('Mizoram', 'Mizoram'),
-        ('Nagaland', 'Nagaland'),
-        ('Odisha', 'Odisha'),
-        ('Puducherry', 'Puducherry'),
-        ('Punjab', 'Punjab'),
-        ('Rajasthan', 'Rajasthan'),
-        ('Sikkim', 'Sikkim'),
-        ('Tamil Nadu', 'Tamil Nadu'),
-        ('Telangana', 'Telangana'),
-        ('Tripura', 'Tripura'),
-        ('Uttar Pradesh', 'Uttar Pradesh'),
-        ('Uttarakhand', 'Uttarakhand'),
-        ('West Bengal', 'West Bengal'),
-)
-    
     BLOOD_GROUP_CHOICES = (
         ('A+', 'A+'),
         ('A-', 'A-'),

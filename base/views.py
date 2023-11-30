@@ -1,14 +1,89 @@
 
-from .models import PersonalInformation,Employee,Branch,Department,Designation,RequiredDocument,Immigration,BankDetails
+from .models import *
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.shortcuts import render,redirect,get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from datetime import datetime
-from .forms import PersonalInformationForm,DocumentForm,ImmigrationForm,BankForm
-from django.http import JsonResponse
+from .forms import *
+
+
+@login_required(login_url='signin')
+def BranchMaster(request):
+    branch_records = Branch.objects.all()
+    
+    if request.method == 'POST':
+        print('hello')
+        branch_form = BranchMasterForm(data=request.POST)
+        branch_code = request.POST['branch_code']
+        branch_name = request.POST['branch_name']
+        branchcode_exist = Branch.objects.filter(branch_code=branch_code).exists() or  Branch.objects.filter(branch_name=branch_name).exists()
+
+        if branchcode_exist:
+            print("Enter")
+            messages.error(request, "Branch name or code already Exists")
+            return redirect('branch-master')
+        
+        if branch_form.is_valid():
+            branch_form.save()
+            messages.success(request, "Branch added successfully.")
+            return redirect('branch-master')
+    else:
+        branch_form = BranchMasterForm()
+
+    context = {
+        'branch_records': branch_records,
+        'branch_form': branch_form,
+    }
+    return render(request, 'branch_master.html', context)
+
+
+
+@login_required(login_url='signin')
+def deleteBranch(request,pk):
+    if request.method == 'POST':
+        branch = Branch.objects.get(id = pk)
+        branch.delete()
+        messages.success(request,"Branch deleted Successfully")
+        return redirect("branch-master")
+        
+    return render(request,'branch-master.html')
+
+@login_required(login_url='signin')
+def editBranch(request, pk):
+    branch = get_object_or_404(Branch, id=pk)
+    
+    if request.method == 'POST':
+        branch_name = request.POST.get('branch_name')
+        branch_code = request.POST.get('branch_code')
+        address = request.POST.get('address')
+        tehsil = request.POST.get('tehsil')
+        district = request.POST.get('district')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        country = request.POST.get('country')
+        status = request.POST.get('status')  == 'on'
+        
+        branch.branch_name = branch_name
+        branch.branch_code = branch_code
+        branch.address = address
+        branch.tehsil = tehsil
+        branch.district = district
+        branch.city = city
+        branch.state = state
+        branch.country = country
+        branch.status = status
+        branch.save()
+        messages.success(request, "Branch updated successfully.")
+        return redirect('branch-master')
+
+    
+    return render(request, 'branch-master.html')
+
+
+
+
 
 
 

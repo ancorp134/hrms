@@ -1,7 +1,26 @@
 from django import forms
-from .models import PersonalInformation,Employee,RequiredDocument,Immigration,BankDetails
+from .models import *
 import string
 from django.forms import DateInput,FileInput
+from .constants import STATE_CHOICES
+
+
+class BranchMasterForm(forms.ModelForm):
+    class Meta:
+        model = Branch
+        fields = '__all__'
+        widgets = {
+            'branch_name' : forms.TextInput(attrs={'class': 'form-control'}),
+            'branch_code' : forms.TextInput(attrs={'class': 'form-control'}),
+            'address' : forms.TextInput(attrs={'class': 'form-control'}),
+            'tehsil' : forms.TextInput(attrs={'class': 'form-control'}),
+            'district' : forms.TextInput(attrs={'class': 'form-control'}),
+            'city' : forms.TextInput(attrs={'class': 'form-control'}),
+            'state': forms.Select(choices=STATE_CHOICES , attrs={'class': 'form-control'}),
+            'country': forms.Select(attrs={'class': 'form-control'}),
+            
+
+        }
 
 
 class BankForm(forms.ModelForm):
@@ -32,6 +51,7 @@ class ImmigrationForm(forms.ModelForm):
             'citizenship': forms.Select(attrs={'class': 'form-control'}),
             'comments': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'cols': 40}),
             'document': forms.FileInput(attrs={'class': 'form-control'}),
+
         }
 
 
@@ -75,7 +95,7 @@ class PersonalInformationForm(forms.ModelForm):
             'pincode': forms.TextInput(attrs={'class': 'form-control'}),
             'nationality': forms.TextInput(attrs={'class': 'form-control'}),
             'cast_category': forms.TextInput(attrs={'class': 'form-control'}),
-            'state': forms.Select(choices=PersonalInformation.STATE_CHOICES , attrs={'class': 'form-control'}),
+            'state': forms.Select(choices=STATE_CHOICES , attrs={'class': 'form-control'}),
             'blood_group': forms.Select(choices=PersonalInformation.BLOOD_GROUP_CHOICES , attrs={'class': 'form-control'}),
         }
 
