@@ -9,6 +9,68 @@ from django.contrib.auth.models import User
 from .forms import *
 
 
+
+@login_required(login_url='signin')
+def DepartmentMaster(request):
+    department_records = Department.objects.all()
+    
+    if request.method == 'POST':
+        print('hello')
+        department_form = DepartmentMasterForm(data=request.POST)
+        department_code = request.POST['department_code']
+        dname = request.POST['department_name']
+        departmentcode_exist = Department.objects.filter(department_code=department_code).exists() or  Department.objects.filter(department_name=dname).exists()
+
+        if departmentcode_exist:
+            print("Enter")
+            messages.error(request, "Department name or code already Exists")
+            return redirect('department-master')
+        
+        if department_form.is_valid():
+            department_form.save()
+            messages.success(request, "Department added successfully.")
+            return redirect('branch-master')
+    else:
+        department_form = DepartmentMasterForm()
+
+    context = {
+        'department_records': department_records,
+        'department_form': department_form,
+    }
+    return render(request, 'department_master.html', context)
+
+
+
+@login_required(login_url='signin')
+def deleteDepartment(request,pk):
+    if request.method == 'POST':
+        department = Department.objects.get(id = pk)
+        department.delete()
+        messages.success(request,"Department deleted Successfully")
+        return redirect("department-master")
+        
+    return render(request,'department-master.html')
+
+@login_required(login_url='signin')
+def editDepartment(request, pk):
+    department = get_object_or_404(Department, id=pk)
+    
+    if request.method == 'POST':
+        department_name = request.POST.get('department_name')
+        department_code = request.POST.get('department_code')
+        status = request.POST.get('status')  == 'on'
+        
+        department.department_name = department_name
+        department.department_code = department_code
+        department.status = status
+        department.save()
+        messages.success(request, "Department updated successfully.")
+        return redirect('department-master')
+
+    
+    return render(request, 'department-master.html')
+
+
 @login_required(login_url='signin')
 def BranchMaster(request):
     branch_records = Branch.objects.all()

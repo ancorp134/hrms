@@ -32,7 +32,7 @@
     {% endif %}
     <div class="page-title">
       <h3>
-        Branch Records
+        Department Records
 
         <button
           type="button"
@@ -40,7 +40,7 @@
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
-          &nbsp;<i class="fas fa-user-shield"></i>Add Branch
+          &nbsp;<i class="fas fa-user-shield"></i>Add department
         </button>
       </h3>
     </div>
@@ -49,29 +49,20 @@
         <table width="100%" class="table table-hover" id="dataTables-example">
           <thead>
             <tr>
-              <th>Branch Name</th>
-              <th>Branch Code</th>
-              <th>Tehsil</th>
-              <th>District</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Country</th>
+              <th>Department Name</th>
+              <th>Department Code</th>
               <th>Status</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {% for branch in branch_records %}
+            {% for department in department_records %}
 
             <tr>
-              <td>{{branch.branch_name}}</td>
-              <td>{{branch.branch_code}}</td>
-              <td>{{branch.tehsil}}</td>
-              <td>{{branch.district}}</td>
-              <td>{{branch.city}}</td>
-              <td>{{branch.state}}</td>
-              <td>{{branch.country}}</td>
-              {% if branch.status %}
+              <td>{{department.department_name}}</td>
+              <td>{{department.department_code}}</td>
+              
+              {% if department.status %}
               <td style="color: #28a745">Active</td>
               {% else %}
               <td style="color: #dc3545">In Active</td>
@@ -81,14 +72,14 @@
                   href=""
                   class="btn btn-outline-info btn-rounded"
                   data-bs-toggle="modal"
-                  data-bs-target="#editBranchModal{{branch.id}}"
+                  data-bs-target="#editdepartmentModal{{department.id}}"
                   ><i class="fas fa-pen"></i
                 ></a>
 
                 <a
                   class="btn btn-outline-danger btn-rounded"
                   data-bs-toggle="modal"
-                  data-bs-target="#deleteBranchModal{{branch.id}}"
+                  data-bs-target="#deletedepartmentModal{{department.id}}"
                 >
                   <i class="fas fa-trash"></i>
                 </a>
@@ -98,7 +89,7 @@
             
             <div
               class="modal fade"
-              id="editBranchModal{{branch.id}}"
+              id="editdepartmentModal{{department.id}}"
               tabindex="-1"
               aria-labelledby="exampleModalLabel"
               aria-hidden="true"
@@ -107,7 +98,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
-                      Edit {{branch.branch_name}}
+                      Edit {{department.department_name}}
                     </h1>
                     <button
                       type="button"
@@ -119,85 +110,28 @@
 
                   <div class="modal-body">
                     <div class="container mt-2">
-                      <form method="post" action="{% url 'editbranch' branch.id %}">
+                      <form method="post" action="{% url 'editdepartment' department.id %}">
                         {% csrf_token %}
                         <div class="row jumbotron box8">
                             <div class="col-sm-6 form-group mt-2">
-                                <label for="id_branch_name">Branch Name:</label>
-                                {% if branch.branch_name %}
-                                <input type="text" id="id_branch_name" name="branch_name" class="form-control" value="{{ branch.branch_name }}">
+                                <label for="id_department_name">Department Name:</label>
+                                {% if department.department_name %}
+                                <input type="text" id="id_department_name" name="department_name" class="form-control" value="{{ department.department_name }}">
                                 {% else %}
-                                <input type="text" id="id_branch_code" name="branch_name" class="form-control">
+                                <input type="text" id="id_department_code" name="department_name" class="form-control">
                                 {% endif %}
                                </div>
                                <div class="col-sm-6 form-group mt-2">
-                                <label for="id_branch_code">Branch code:</label>
-                                {% if branch.branch_code %}
-                                <input type="text" id="id_branch_code" name="branch_code" class="form-control" value="{{ branch.branch_code }}">
+                                <label for="id_department_code">department code:</label>
+                                {% if department.department_code %}
+                                <input type="text" id="id_department_code" name="department_code" class="form-control" value="{{ department.department_code }}">
                                 {% else %}
-                                <input type="text" id="id_branch_code" name="branch_code" class="form-control">
+                                <input type="text" id="id_department_code" name="department_code" class="form-control">
                                 {% endif %}
                                </div>
-                               <div class="col-sm-12 form-group mt-2">
-                                <label >Address</label>
-                                {% if branch.address %}
-                                <input type="text" id="id_branch_address" name="address" class="form-control" value="{{ branch.address }}">
-                                {% else %}
-                                <input type="text" id="id_branch_address" name="address" class="form-control">
-                                {% endif %}
-                               </div>
-                               <div class="col-sm-6 form-group mt-2">
-                                <label >Tehsil</label>
-                                {% if branch.tehsil %}
-                                <input type="text" id="id_branch_tehsil" name="tehsil" class="form-control" value="{{ branch.tehisl }}">
-                                {% else %}
-                                <input type="text" id="id_branch_tehsil" name="tehsil" class="form-control">
-                                {% endif %}
-                               </div>
-                               <div class="col-sm-6 form-group mt-2">
-                                <label >District</label>
-                                {% if branch.district %}
-                                <input type="text" id="id_branch_district" name="district" class="form-control" value="{{ branch.district }}">
-                                {% else %}
-                                <input type="text" id="id_branch_district" name="district" class="form-control">
-                                {% endif %}
-                               </div>
-                               <div class="col-sm-6 form-group mt-2">
-                                <label>City</label>
-                                {% if branch.city %}
-                                <input type="text" id="id_branch_city" name="city" class="form-control" value="{{ branch.city }}">
-                                {% else %}
-                                <input type="text" id="id_branch_city" name="city" class="form-control">
-                                {% endif %}
-                               </div>
-                               <div class="col-sm-6 form-group mt-2">
-                                <label for="id_branch_state">State:</label>
-                                <select id="id_branch_state" name="state" class="form-control">
-                                    {% for choice in branch_form.state.field.choices %}
-                                        {% if choice.0 == branch.state %}
-                                            <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
-                                        {% else %}
-                                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-sm-12 form-group mt-2">
-                                <label for="id_branch_country">Country:</label>
-                                <select id="id_branch_country" name="country" class="form-control">
-                                    {% for choice in branch_form.country.field.choices %}
-                                        {% if choice.0 == branch.country %}
-                                            <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
-                                        {% else %}
-                                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            
                                <div class="col-sm-4 form-group mt-2">
                                 <label for="is_active">Active</label>
-                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="status" {% if branch.status %} checked {% endif %}>
+                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="status" {% if department.status %} checked {% endif %}>
                             </div>
                         </div>
 
@@ -222,16 +156,16 @@
            
             <div
               class="modal fade"
-              id="deleteBranchModal{{branch.id}}"
+              id="deletedepartmentModal{{department.id}}"
               tabindex="-1"
-              aria-labelledby="deleteBranchModalLabel"
+              aria-labelledby="deletedepartmentModalLabel"
               aria-hidden="true"
             >
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="deleteBranchModalLabel">
-                      Confirm User Deletion
+                    <h5 class="modal-title" id="deletedepartmentModalLabel">
+                      Confirm  Deletion
                     </h5>
                     <button
                       type="button"
@@ -242,8 +176,8 @@
                   </div>
                   <div class="modal-body">
                     <p>
-                      Are you sure you want to delete user
-                      <strong>{{ branch.branch_name }}</strong>?
+                      Are you sure you want to delete
+                      <strong>{{ department.department_name }}</strong>?
                     </p>
                   </div>
                   <div class="modal-footer">
@@ -254,7 +188,7 @@
                     >
                       Cancel
                     </button>
-                    <form method="post" action="{% url 'deletebranch' branch.id %}">
+                    <form method="post" action="{% url 'deletedepartment' department.id %}">
                       {% csrf_token %}
                       <input
                         type="submit"
@@ -285,7 +219,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Branch</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add department</h1>
         <button
           type="button"
           class="btn-close"
@@ -297,10 +231,10 @@
       <div class="modal-body">
         <div class="container mt-2">
           
-          <form method="post" action="{% url 'branch-master' %}">
+          <form method="post" action="{% url 'department-master' %}">
             {% csrf_token %}
             <div class="row jumbotron box8">
-              {% for field in branch_form %}
+              {% for field in department_form %}
               <div class="col-sm-6 form-group mt-2">
                 {{ field.label_tag }} {{ field }} {% if field.help_text %}
                 <small class="form-text text-muted"
@@ -319,7 +253,7 @@
               >
                 Close
               </button>
-              <button type="submit" class="btn btn-primary">Add Branch</button>
+              <button type="submit" class="btn btn-primary">Add department</button>
             </div>
           </form>
         </div>

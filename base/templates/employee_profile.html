@@ -158,10 +158,10 @@
 
                                             {% for department in departments %}
                                             {% if department.id == employee.department.id %}
-                                            <option value="{{ department.id }}" selected>{{ department.department }}
+                                            <option value="{{ department.id }}" selected>{{ department.department_name }}
                                             </option>
                                             {% else %}
-                                            <option value="{{ department.id }}">{{ department.department }}</option>
+                                            <option value="{{ department.id }}">{{ department.department_name }}</option>
                                             {% endif %}
                                             {% endfor %}
                                         </select>

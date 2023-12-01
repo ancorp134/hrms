@@ -5,6 +5,17 @@ from django.forms import DateInput,FileInput
 from .constants import STATE_CHOICES
 
 
+
+class DepartmentMasterForm(forms.ModelForm):
+    class Meta:
+        model = Department
+        fields = '__all__'
+        widgets = {
+            'department_name' : forms.TextInput(attrs={'class': 'form-control'}),
+            'department_code' : forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
 class BranchMasterForm(forms.ModelForm):
     class Meta:
         model = Branch
