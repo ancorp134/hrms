@@ -71,6 +71,67 @@ def editDepartment(request, pk):
     return render(request, 'department-master.html')
 
 
+
+def DesignationMaster(request):
+    designation_records = Designation.objects.all()
+    
+    if request.method == 'POST':
+        print('hello')
+        designation_form = DesignationMasterForm(data=request.POST)
+        designation_code = request.POST['designation_code']
+        dname = request.POST['designation_name']
+        designationcode_exist = Designation.objects.filter(designation_code=designation_code).exists() or  Designation.objects.filter(designation_name=dname).exists()
+
+        if designationcode_exist:
+            print("Enter")
+            messages.error(request, "Designation name or code already Exists")
+            return redirect('designation-master')
+        
+        if designation_form.is_valid():
+            designation_form.save()
+            messages.success(request, "Designation added successfully.")
+            return redirect('designation-master')
+    else:
+        designation_form = DesignationMasterForm()
+
+    context = {
+        'designation_records': designation_records,
+        'designation_form': designation_form,
+    }
+    return render(request, 'designation_master.html', context)
+
+
+
+@login_required(login_url='signin')
+def deleteDesignation(request,pk):
+    if request.method == 'POST':
+        designation = Designation.objects.get(id = pk)
+        designation.delete()
+        messages.success(request,"Designation deleted Successfully")
+        return redirect("designation-master")
+        
+    return render(request,'designation-master.html')
+
+@login_required(login_url='signin')
+def editDesignation(request, pk):
+    designation = get_object_or_404(Designation, id=pk)
+    
+    if request.method == 'POST':
+        designation_name = request.POST.get('designation_name')
+        designation_code = request.POST.get('designation_code')
+        status = request.POST.get('status')  == 'on'
+        
+        designation.designation_name = designation_name
+        designation.designation_code = designation_code
+        designation.status = status
+        designation.save()
+        messages.success(request, "Designation updated successfully.")
+        return redirect('designation-master')
+
+    
+    return render(request, 'designation-master.html')
+
+
 @login_required(login_url='signin')
 def BranchMaster(request):
     branch_records = Branch.objects.all()

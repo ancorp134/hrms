@@ -37,8 +37,9 @@ class Branch(models.Model):
 
 class Designation(models.Model):
     id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
-    designation = models.CharField(max_length=100,unique=True)
-    slug = models.CharField(max_length=100)
+    designation_name = models.CharField(max_length=100,unique=True)
+    designation_code = models.CharField(max_length=5,unique=True,blank=True,null=True)
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.designation

@@ -4,6 +4,14 @@ import string
 from django.forms import DateInput,FileInput
 from .constants import STATE_CHOICES
 
+class DesignationMasterForm(forms.ModelForm):
+    class Meta:
+        model = Designation
+        fields = '__all__'
+        widgets = {
+            'designation_name' : forms.TextInput(attrs={'class': 'form-control'}),
+            'designation_code' : forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 class DepartmentMasterForm(forms.ModelForm):

@@ -1,0 +1,265 @@
+{% extends 'base.html' %} {% load static %} {% block start %}
+
+<div class="content">
+  <div class="container">
+    {% if messages %} 
+    {% for message in messages %} 
+    {% if message.tags == 'error' %}
+    <div class="alert bg-warning alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% else %}
+    <div
+      class="alert bg-success alert-dismissible fade show text-white"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endif %} 
+    {% endfor %} 
+    {% endif %}
+    <div class="page-title">
+      <h3>
+        Designation Records
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary float-end"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          &nbsp;<i class="fas fa-user-shield"></i>Add Designation
+        </button>
+      </h3>
+    </div>
+    <div class="box box-primary">
+      <div class="box-body">
+        <table width="100%" class="table table-hover" id="dataTables-example">
+          <thead>
+            <tr>
+              <th>Designation Name</th>
+              <th>Designation Code</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for designation in designation_records %}
+
+            <tr>
+              <td>{{designation.designation_name}}</td>
+              <td>{{designation.designation_code}}</td>
+              
+              {% if designation.status %}
+              <td style="color: #28a745">Active</td>
+              {% else %}
+              <td style="color: #dc3545">In Active</td>
+              {% endif %}
+              <td class="text-end">
+                <a
+                  href=""
+                  class="btn btn-outline-info btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editdesignationModal{{designation.id}}"
+                  ><i class="fas fa-pen"></i
+                ></a>
+
+                <a
+                  class="btn btn-outline-danger btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deletedesignationModal{{designation.id}}"
+                >
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+
+            
+            <div
+              class="modal fade"
+              id="editdesignationModal{{designation.id}}"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      Edit {{designation.designation_name}}
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="container mt-2">
+                      <form method="post" action="{% url 'editdesignation' designation.id %}">
+                        {% csrf_token %}
+                        <div class="row jumbotron box8">
+                            <div class="col-sm-6 form-group mt-2">
+                                <label for="id_designation_name">designation Name:</label>
+                                {% if designation.designation_name %}
+                                <input type="text" id="id_designation_name" name="designation_name" class="form-control" value="{{ designation.designation_name }}">
+                                {% else %}
+                                <input type="text" id="id_designation_code" name="designation_name" class="form-control">
+                                {% endif %}
+                               </div>
+                               <div class="col-sm-6 form-group mt-2">
+                                <label for="id_designation_code">designation code:</label>
+                                {% if designation.designation_code %}
+                                <input type="text" id="id_designation_code" name="designation_code" class="form-control" value="{{ designation.designation_code }}">
+                                {% else %}
+                                <input type="text" id="id_designation_code" name="designation_code" class="form-control">
+                                {% endif %}
+                               </div>
+                               <div class="col-sm-4 form-group mt-2">
+                                <label for="is_active">Active</label>
+                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="status" {% if designation.status %} checked {% endif %}>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            Close
+                          </button>
+                          <button type="submit" class="btn btn-primary">
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+            <div
+              class="modal fade"
+              id="deletedesignationModal{{designation.id}}"
+              tabindex="-1"
+              aria-labelledby="deletedesignationModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deletedesignationModalLabel">
+                      Confirm  Deletion
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>
+                      Are you sure you want to delete
+                      <strong>{{ designation.designation_name }}</strong>?
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Cancel
+                    </button>
+                    <form method="post" action="{% url 'deletedesignation' designation.id %}">
+                      {% csrf_token %}
+                      <input
+                        type="submit"
+                        class="btn btn-danger"
+                        value="Delete"
+                      />
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add designation</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container mt-2">
+          
+          <form method="post" action="{% url 'designation-master' %}">
+            {% csrf_token %}
+            <div class="row jumbotron box8">
+              {% for field in designation_form %}
+              <div class="col-sm-6 form-group mt-2">
+                {{ field.label_tag }} {{ field }} {% if field.help_text %}
+                <small class="form-text text-muted"
+                  >{{ field.help_text }}</small
+                >
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Add designation</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

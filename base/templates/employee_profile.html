@@ -172,10 +172,10 @@
 
                                             {% for designation in designations %}
                                             {% if designation.id == employee.designation.id %}
-                                            <option value="{{ designation.id }}" selected>{{ designation.designation }}
+                                            <option value="{{ designation.id }}" selected>{{ designation.designation_name }}
                                             </option>
                                             {% else %}
-                                            <option value="{{ designation.id }}">{{ designation.designation }}</option>
+                                            <option value="{{ designation.id }}">{{ designation.designation_name }}</option>
                                             {% endif %}
                                             {% endfor %}
                                         </select>
