@@ -225,7 +225,7 @@ class BankDetails(models.Model):
 
 class EmployeeAttendence(models.Model):
     id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
-    employee = models.ForeignKey(Employee,on_delete=models.CASCADE,editable=False)
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
     in_Time = models.TimeField()
     in_Date = models.DateField()
     out_Time = models.TimeField()
@@ -236,7 +236,7 @@ class EmployeeAttendence(models.Model):
     year = models.PositiveSmallIntegerField(default=2023)
 
     def __str__(self):
-        return f"{self.employee.username}'s Attendance on {self.date}" 
+        return f"{self.employee.user.username}'s Attendance" 
 
     
 @receiver(post_save, sender=User)

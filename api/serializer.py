@@ -30,3 +30,10 @@ class BankDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankDetails
         fields = '__all__'
+
+
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeAttendence
+        fields = '__all__'

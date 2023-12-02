@@ -5,6 +5,7 @@ from rest_framework import status
 from .serializer import *
 from base.models import *
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
 
 class EmployeeLoginView(APIView):
     def post(self, request):
@@ -25,3 +26,25 @@ class EmployeeInfo(APIView):
             "employee": serializer.data,
             "bank_details": bank_data.data  # accessing the serialized data
         })
+    
+class EmployeeAttendence(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser]
+
+    def post(self, request):
+        try:
+            # Get the employee associated with the authenticated user
+            employee = Employee.objects.get(user=request.user)
+            
+            # Include employee ID in the data sent for serializer validation
+            data = request.data.copy()
+            data['employee'] = employee.id  # Assuming 'employee' is the ForeignKey in EmployeeAttendance
+        
+            serializer = AttendanceSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Employee.DoesNotExist:
+            return Response({"error": "Employee does not exist"}, status=status.HTTP_404_NOT_FOUND)
+

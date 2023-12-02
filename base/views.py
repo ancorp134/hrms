@@ -242,7 +242,14 @@ def LogoutView(request):
 
 @login_required(login_url='signin')
 def Dashboard(request):
-    return render(request,'dashboard.html')
+    try:
+        ec = Employee.objects.count()
+    except:
+        ec = 0
+    context = {
+        'ec' : ec,
+    }
+    return render(request,'dashboard.html' , context)
 
 
 @login_required(login_url='signin')
