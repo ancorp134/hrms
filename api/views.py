@@ -24,6 +24,7 @@ class EmployeeInfo(APIView):
         serializer = EmployeeSerializer(employee)
         return Response({
             "employee": serializer.data,
+
             "bank_details": bank_data.data  # accessing the serialized data
         })
     
@@ -47,4 +48,6 @@ class EmployeeAttendence(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Employee.DoesNotExist:
             return Response({"error": "Employee does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
 

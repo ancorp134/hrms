@@ -9,6 +9,70 @@ from django.contrib.auth.models import User
 from .forms import *
 
 
+@login_required(login_url='signin')
+def LeaveMasterView(request):
+    leave_records = LeaveMaster.objects.all()
+    
+    if request.method == 'POST':
+        print('hello')
+        leave_form = LeaveMasterForm(data=request.POST)
+        leave_code = request.POST['leave_code']
+        lname = request.POST['leave_name']
+        leavecode_exist = LeaveMaster.objects.filter(leave_code=leave_code).exists() or  LeaveMaster.objects.filter(leave_name=lname).exists()
+
+        if leavecode_exist:
+            print("Enter")
+            messages.error(request, "Leave name or code already Exists")
+            return redirect('leave-master')
+        
+        if leave_form.is_valid():
+            leave_form.save()
+            messages.success(request, "Leave added successfully.")
+            return redirect('leave-master')
+    else:
+        leave_form = LeaveMasterForm()
+
+    context = {
+        'leave_records': leave_records,
+        'leave_form': leave_form,
+    }
+    return render(request, 'leave_master.html', context)
+
+
+
+@login_required(login_url='signin')
+def deleteLeave(request,pk):
+    if request.method == 'POST':
+        leave = LeaveMaster.objects.get(id = pk)
+        leave.delete()
+        messages.success(request,"Leave deleted Successfully")
+        return redirect("leave-master")
+        
+    return render(request,'leave_master.html')
+
+@login_required(login_url='signin')
+def editLeave(request, pk):
+    leave = get_object_or_404(LeaveMaster, id=pk)
+    
+    if request.method == 'POST':
+        leave_name = request.POST.get('leave_name')
+        leave_code = request.POST.get('leave_code')
+        status = request.POST.get('status')  == 'on'
+        paid = request.POST.get('paid') == 'on'
+        
+        leave.leave_name = leave_name
+        leave.leave_code = leave_code
+        leave.status = status
+        leave.paid_leave = paid
+        leave.save()
+        messages.success(request, "Leave updated successfully.")
+        return redirect('leave-master')
+
+    
+    return render(request, 'leave_master.html')
+
+
+
 
 @login_required(login_url='signin')
 def DepartmentMaster(request):

@@ -4,6 +4,16 @@ import string
 from django.forms import DateInput,FileInput
 from .constants import STATE_CHOICES
 
+
+class LeaveMasterForm(forms.ModelForm):
+    class Meta:
+        model =  LeaveMaster
+        fields = '__all__'
+        widgets = {
+            'leave_name' : forms.TextInput(attrs={'class': 'form-control'}),
+            'leave_code' : forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 class DesignationMasterForm(forms.ModelForm):
     class Meta:
         model = Designation

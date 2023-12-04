@@ -30,6 +30,9 @@ urlpatterns = [
     path('employees/<str:pk>/profile',views.employeeProfileView, name='employee_profile'),
     path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteDocument, name='delete_document'),
     path('api/',include('api.urls')),
+    path('leave/leave-master/',views.LeaveMasterView,name='leave-master'),
+    path('laeve/leave-master/<str:pk>/delete',views.deleteLeave,name="deleteleave"),
+    path('leave/leave-master/<str:pk>/edit',views.editLeave,name="editleave"),
    
 ]
 

@@ -237,6 +237,14 @@ class EmployeeAttendence(models.Model):
 
     def __str__(self):
         return f"{self.employee.user.username}'s Attendance" 
+    
+
+class LeaveMaster(models.Model):
+    id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
+    leave_name = models.CharField(max_length=50 , unique=True)
+    leave_code = models.CharField(max_length=5,null=True,blank=True,unique=True)
+    paid_leave = models.BooleanField(default=False)
+    status = models.BooleanField(default=True)
 
     
 @receiver(post_save, sender=User)

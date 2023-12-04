@@ -1,0 +1,274 @@
+{% extends 'base.html' %} {% load static %} {% block start %}
+
+<div class="content">
+  <div class="container">
+    {% if messages %} 
+    {% for message in messages %} 
+    {% if message.tags == 'error' %}
+    <div class="alert bg-warning alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% else %}
+    <div
+      class="alert bg-success alert-dismissible fade show text-white"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endif %} 
+    {% endfor %} 
+    {% endif %}
+    <div class="page-title">
+      <h3>
+        Leave Records
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary float-end"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          &nbsp;<i class="fas fa-user-shield"></i>Add Leave
+        </button>
+      </h3>
+    </div>
+    <div class="box box-primary">
+      <div class="box-body">
+        <table width="100%" class="table table-hover" id="dataTables-example">
+          <thead>
+            <tr>
+              <th>Leave Name</th>
+              <th>Leave Code</th>
+              <th>Paid/Unpaid</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for leave in leave_records %}
+
+            <tr>
+              <td>{{leave.leave_name}}</td>
+              <td>{{leave.leave_code}}</td>
+              {% if leave.paid_leave %}
+              <td style="color: #28a745">Paid</td>
+              {% else %}
+              <td style="color: #dc3545">Unpaid</td>
+              {% endif %}
+              {% if leave.status %}
+              <td style="color: #28a745">Active</td>
+              {% else %}
+              <td style="color: #dc3545">In Active</td>
+              {% endif %}
+              <td class="text-end">
+                <a
+                  href=""
+                  class="btn btn-outline-info btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editleaveModal{{leave.id}}"
+                  ><i class="fas fa-pen"></i
+                ></a>
+
+                <a
+                  class="btn btn-outline-danger btn-rounded"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteleaveModal{{leave.id}}"
+                >
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+
+            
+            <div
+              class="modal fade"
+              id="editleaveModal{{leave.id}}"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      Edit {{leave.leave_name}}
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="container mt-2">
+                      <form method="post" action="{% url 'editleave' leave.id %}">
+                        {% csrf_token %}
+                        <div class="row jumbotron box8">
+                            <div class="col-sm-6 form-group mt-2">
+                                <label for="id_leave_name">leave Name:</label>
+                                {% if leave.leave_name %}
+                                <input type="text" id="id_leave_name" name="leave_name" class="form-control" value="{{ leave.leave_name }}">
+                                {% else %}
+                                <input type="text" id="id_leave_code" name="leave_name" class="form-control">
+                                {% endif %}
+                               </div>
+                               <div class="col-sm-6 form-group mt-2">
+                                <label for="id_leave_code">leave code:</label>
+                                {% if leave.leave_code %}
+                                <input type="text" id="id_leave_code" name="leave_code" class="form-control" value="{{ leave.leave_code }}">
+                                {% else %}
+                                <input type="text" id="id_leave_code" name="leave_code" class="form-control">
+                                {% endif %}
+                               </div>
+                               <div class="col-sm-4 form-group mt-2">
+                                <label for="is_paid">Paid</label>
+                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="paid" {% if leave.paid_leave %} checked {% endif %}>
+                                </div>
+                               <div class="col-sm-4 form-group mt-2">
+                                <label for="is_active">Active</label>
+                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="status" {% if leave.status %} checked {% endif %}>
+                                </div>
+                            </div>
+
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            Close
+                          </button>
+                          <button type="submit" class="btn btn-primary">
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+            <div
+              class="modal fade"
+              id="deleteleaveModal{{leave.id}}"
+              tabindex="-1"
+              aria-labelledby="deleteleaveModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteleaveModalLabel">
+                      Confirm  Deletion
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>
+                      Are you sure you want to delete
+                      <strong>{{ leave.leave_name }}</strong>?
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Cancel
+                    </button>
+                    <form method="post" action="{% url 'deleteleave' leave.id %}">
+                      {% csrf_token %}
+                      <input
+                        type="submit"
+                        class="btn btn-danger"
+                        value="Delete"
+                      />
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Leave</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container mt-2">
+          
+          <form method="post" action="{% url 'leave-master' %}">
+            {% csrf_token %}
+            <div class="row jumbotron box8">
+              {% for field in leave_form %}
+              <div class="col-sm-6 form-group mt-2">
+                {{ field.label_tag }} {{ field }} {% if field.help_text %}
+                <small class="form-text text-muted"
+                  >{{ field.help_text }}</small
+                >
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Add leave</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
