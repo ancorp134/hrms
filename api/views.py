@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -53,6 +53,19 @@ class LeaveApplicationView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes  = [JSONParser]
 
+
+    def delete(self,request,pk):
+        try:
+            leave_record = get_object_or_404(LeaveApplication,id=pk)
+            leave_record.delete()
+            return Response({
+                "status" : "success",
+            })
+        except:
+            return Response({
+                "status" : "error",
+            })
+
     def get(self, request):
         try:
             employee = Employee.objects.get(user=request.user)
@@ -83,6 +96,61 @@ class LeaveApplicationView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Employee.DoesNotExist:
             return Response({"error": "Employee does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class approveleave(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes  = [JSONParser]
+
+
+    def post(self,request,pk):
+        try:
+            leave_record = get_object_or_404(LeaveApplication,id=pk)
+            leave_record.status = "Approved"
+            leave_record.save()
+            return Response({
+                "status" : "success",
+            })
+        except:
+            return Response({
+                "status" : "error",
+            })
+
+class rejectleave(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes  = [JSONParser]
+
+
+    def post(self,request,pk):
+        try:
+            leave_record = get_object_or_404(LeaveApplication,id=pk)
+            leave_record.status = "Rejected"
+            leave_record.save()
+            return Response({
+                "status" : "success",
+            })
+        except:
+            return Response({
+                "status" : "error",
+            })
+        
+
+class deleteleave(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes  = [JSONParser]
+
+
+    def delete(self,request,pk):
+        try:
+            leave_record = get_object_or_404(LeaveApplication,id=pk)
+            leave_record.delete()
+            return Response({
+                "status" : "success",
+            })
+        except:
+            return Response({
+                "status" : "error",
+            })
 
 
 
