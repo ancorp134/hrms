@@ -42,7 +42,7 @@ class Designation(models.Model):
     status = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.designation
+        return self.designation_name
     
 class Department(models.Model):
     id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
@@ -52,7 +52,7 @@ class Department(models.Model):
     
 
     def __str__(self):
-        return self.department
+        return self.department_name
     
 
 class Employee(models.Model):
@@ -246,6 +246,24 @@ class LeaveMaster(models.Model):
     paid_leave = models.BooleanField(default=False)
     status = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.leave_name
+
+class LeaveApplication(models.Model):
+
+    
+
+    id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
+    leave_name = models.ForeignKey(LeaveMaster,on_delete=models.CASCADE)
+    from_date = models.DateField()
+    to_date = models.DateField()
+    period = models.SmallIntegerField(default=0)
+    reason = models.CharField(max_length=200,blank=True,null=True)
+    status = models.CharField(max_length=50,default="Pending",blank=True,null=True)
+
+
+    
     
 @receiver(post_save, sender=User)
 def create_employee(sender, instance, created, **kwargs):

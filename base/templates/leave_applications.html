@@ -1,0 +1,128 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block start %}
+
+<div class="content">
+  <div class="container">
+    {% if messages %} 
+    {% for message in messages %} 
+    {% if message.tags == 'error' %}
+    <div class="alert bg-warning alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% else %}
+    <div
+      class="alert bg-success alert-dismissible fade show text-white"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endif %} 
+    {% endfor %} 
+    {% endif %}
+    <div class="page-title">
+      <h3>
+        Leave Application(s) {% comment %}
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary float-end"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          &nbsp;<i class="fas fa-user-shield"></i>Add User
+        </button>
+        {% endcomment %}
+      </h3>
+    </div>
+    <div class="box box-primary">
+      <div class="box-body">
+        <table width="100%" class="table table-hover" id="dataTables-example">
+          <thead>
+            <tr>
+              <th>Employee Code</th>
+              <th>Employee Name</th>
+              <th>Reporting Manager</th>
+              <th>Leave</th>
+              <th>From Date</th>
+              <th>To Date</th>
+              <th>Period</th>
+              <th>Status</th>
+
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for leaves in leave_applications %}
+
+            <tr>
+              <td>{{leaves.employee.employee_code}}</td>
+              <td>
+                {{leaves.employee.first_name}} {{leaves.employee.last_name}}
+              </td>
+              <td>{{leaves.employee.reporting_manager}}</td>
+              <td>{{leaves.leave_name}}</td>
+              <td>{{leaves.from_date}}</td>
+              <td>{{leaves.to_date}}</td>
+              <td>{{leaves.period}}</td>
+
+              {% if leaves.status == 'Pending' %}
+              <td>{{leaves.status}}</td>
+              <td class="text-end">
+                <a
+                  href="{% url 'approve_leave' leaves.id %}"
+                  class="btn btn-outline-success btn-rounded"
+                >
+                  <i class="fas fa-thumbs-up"></i>
+                </a>
+                <a
+                  href="{% url 'reject_leave' leaves.id %}"
+                  class="btn btn-outline-danger btn-rounded"
+                >
+                  <i class="fas fa-thumbs-down"></i>
+                </a>
+              </td>
+              {% elif leaves.status == "Approved" %}
+              <td style="color: #28a745">{{leaves.status}}</td>
+              <td class="text-end">
+                <a
+                  href="{% url 'delete_leave' leaves.id %}"
+                  class="btn btn-outline-danger btn-rounded"
+                >
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+              {% else %}
+              <td style="color: #dc3545">{{leaves.status}}</td>
+
+              <td class="text-end">
+                <a
+                  href="{% url 'delete_leave' leaves.id %}"
+                  class="btn btn-outline-danger btn-rounded"
+                >
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+              {% endif %}
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -33,6 +33,10 @@ urlpatterns = [
     path('leave/leave-master/',views.LeaveMasterView,name='leave-master'),
     path('laeve/leave-master/<str:pk>/delete',views.deleteLeave,name="deleteleave"),
     path('leave/leave-master/<str:pk>/edit',views.editLeave,name="editleave"),
+    path('leave/leave-applications',views.LeaveApplicationView,name="leave-applications"),
+    path('leave/leave-applications/approve/<str:pk>/', views.approve_leave, name='approve_leave'),
+    path('leave/leave-applications/reject/<str:pk>/', views.reject_leave, name='reject_leave'),
+    path('leave/leave-applications/delete/<str:pk>/', views.delete_leave, name='delete_leave'),
    
 ]
 

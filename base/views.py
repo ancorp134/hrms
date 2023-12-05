@@ -73,6 +73,39 @@ def editLeave(request, pk):
 
 
 
+@login_required(login_url='sigin')
+def LeaveApplicationView(request):
+    leave_applications = LeaveApplication.objects.all()
+    context = {
+        'leave_applications' : leave_applications
+    }
+
+    return render(request,'leave_applications.html',context)
+
+@login_required(login_url='signin')
+def approve_leave(request,pk):
+    leave = get_object_or_404(LeaveApplication , id = pk)
+    leave.status = "Approved"
+    leave.save()
+    messages.success(request, "Leave Approved successfully.")
+    return redirect('leave-applications')
+
+@login_required(login_url='signin')
+def reject_leave(request,pk):
+    leave = get_object_or_404(LeaveApplication , id = pk)
+    leave.status = "Rejected"
+    leave.save()
+    messages.success(request, "Leave Rejected successfully.")
+    return redirect('leave-applications')
+
+@login_required(login_url='signin')
+def delete_leave(request,pk):
+    leave = get_object_or_404(LeaveApplication , id = pk)
+    leave.delete()
+    messages.error(request, "Leave deleted successfully.")
+    return redirect('leave-applications')
+
+
 
 @login_required(login_url='signin')
 def DepartmentMaster(request):

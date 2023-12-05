@@ -48,6 +48,41 @@ class EmployeeAttendence(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Employee.DoesNotExist:
             return Response({"error": "Employee does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+class LeaveApplicationView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes  = [JSONParser]
+
+    def get(self, request):
+        try:
+            employee = Employee.objects.get(user=request.user)
+            leave_applications = LeaveApplication.objects.filter(employee__reporting_manager=employee)
+            
+            # Serialize the queryset using the serializer
+            serializer = LeaveApplicationSerializer(leave_applications, many=True)
+            
+            return Response({
+                "leave_approvals": serializer.data  # Return serialized data
+            })
+        except Employee.DoesNotExist:
+            return Response({
+                "status": "No data is available"
+            })
+
+
+    def post(self,request):
+        try:
+            employee = Employee.objects.get(user = request.user)
+            data = request.data.copy()
+            data['employee'] = employee.id 
+
+            serializer = LeaveApplicationSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Employee.DoesNotExist:
+            return Response({"error": "Employee does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 
 

@@ -37,3 +37,9 @@ class AttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmployeeAttendence
         fields = '__all__'
+
+
+class LeaveApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LeaveApplication
+        fields = '__all__'
