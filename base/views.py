@@ -14,14 +14,14 @@ def LeaveMasterView(request):
     leave_records = LeaveMaster.objects.all()
     
     if request.method == 'POST':
-        print('hello')
+        
         leave_form = LeaveMasterForm(data=request.POST)
         leave_code = request.POST['leave_code']
         lname = request.POST['leave_name']
         leavecode_exist = LeaveMaster.objects.filter(leave_code=leave_code).exists() or  LeaveMaster.objects.filter(leave_name=lname).exists()
 
         if leavecode_exist:
-            print("Enter")
+        
             messages.error(request, "Leave name or code already Exists")
             return redirect('leave-master')
         
@@ -88,7 +88,8 @@ def approve_leave(request,pk):
     leave.status = "Approved"
     leave.save()
     messages.success(request, "Leave Approved successfully.")
-    return redirect('leave-applications')
+    redirect_to = request.META.get('HTTP_REFERER', 'leave-applications')
+    return redirect(redirect_to)
 
 @login_required(login_url='signin')
 def reject_leave(request,pk):
@@ -96,14 +97,16 @@ def reject_leave(request,pk):
     leave.status = "Rejected"
     leave.save()
     messages.success(request, "Leave Rejected successfully.")
-    return redirect('leave-applications')
+    redirect_to = request.META.get('HTTP_REFERER', 'leave-applications')
+    return redirect(redirect_to)
 
 @login_required(login_url='signin')
 def delete_leave(request,pk):
     leave = get_object_or_404(LeaveApplication , id = pk)
     leave.delete()
     messages.error(request, "Leave deleted successfully.")
-    return redirect('leave-applications')
+    redirect_to = request.META.get('HTTP_REFERER', 'leave-applications')
+    return redirect(redirect_to)
 
 
 
@@ -112,14 +115,14 @@ def DepartmentMaster(request):
     department_records = Department.objects.all()
     
     if request.method == 'POST':
-        print('hello')
+        
         department_form = DepartmentMasterForm(data=request.POST)
         department_code = request.POST['department_code']
         dname = request.POST['department_name']
         departmentcode_exist = Department.objects.filter(department_code=department_code).exists() or  Department.objects.filter(department_name=dname).exists()
 
         if departmentcode_exist:
-            print("Enter")
+    
             messages.error(request, "Department name or code already Exists")
             return redirect('department-master')
         
@@ -173,14 +176,14 @@ def DesignationMaster(request):
     designation_records = Designation.objects.all()
     
     if request.method == 'POST':
-        print('hello')
+        
         designation_form = DesignationMasterForm(data=request.POST)
         designation_code = request.POST['designation_code']
         dname = request.POST['designation_name']
         designationcode_exist = Designation.objects.filter(designation_code=designation_code).exists() or  Designation.objects.filter(designation_name=dname).exists()
 
         if designationcode_exist:
-            print("Enter")
+        
             messages.error(request, "Designation name or code already Exists")
             return redirect('designation-master')
         
@@ -234,14 +237,14 @@ def BranchMaster(request):
     branch_records = Branch.objects.all()
     
     if request.method == 'POST':
-        print('hello')
+        
         branch_form = BranchMasterForm(data=request.POST)
         branch_code = request.POST['branch_code']
         branch_name = request.POST['branch_name']
         branchcode_exist = Branch.objects.filter(branch_code=branch_code).exists() or  Branch.objects.filter(branch_name=branch_name).exists()
 
         if branchcode_exist:
-            print("Enter")
+        
             messages.error(request, "Branch name or code already Exists")
             return redirect('branch-master')
         
@@ -574,14 +577,14 @@ def employeeProfileView(request , pk):
             employee.last_name = request.POST.get('last_name')
             employee.gender = request.POST.get('gender')
             branch_id = request.POST.get('branch')
-            # print(branch_id)
+        
             branch = get_object_or_404(Branch, id=branch_id)
-            print(branch)
+        
             employee.branch = branch
             branch_code = request.POST.get('branch_code')
             code = request.POST.get('code')
             employee.employee_code = f"{branch_code}/{code}"
-            # print(employee.employee_code)
+        
             punching_code = request.POST.get('punching_code')
             punching_code_exist = Employee.objects.exclude(id=employee.id).filter(punching_code=punching_code)
 
@@ -640,7 +643,7 @@ def employeeProfileView(request , pk):
 
             bank_form = BankForm(request.POST)
             other_bank_name = request.POST.get('bank_name_other')
-            print(other_bank_name)
+    
             if bank_form.is_valid():
                 document = bank_form.save(commit=False)
                 if document.bank_name == "Other":
@@ -665,6 +668,7 @@ def employeeProfileView(request , pk):
         personal_info, created = PersonalInformation.objects.get_or_create(employee=employee)
         employee_documents= RequiredDocument.objects.filter(employee=employee)
         immigration_documents = Immigration.objects.filter(employee=employee)
+        leaves_applications = LeaveApplication.objects.filter(employee=employee)
         bank_records = BankDetails.objects.filter(employee=employee)
         form = PersonalInformationForm(instance=personal_info)
         document_form = DocumentForm()
@@ -698,6 +702,7 @@ def employeeProfileView(request , pk):
         'immigration_documents': immigration_documents,
         'bank_form' : bank_form,
         'bank_records' : bank_records,
+        'leave_applications' : leaves_applications,
     }
     return render(request,'employee_profile.html',context)
 

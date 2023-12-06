@@ -47,6 +47,10 @@
                         <a class="nav-link" id="bank-tab" data-bs-toggle="tab" href="#bank_details" role="tab"
                             aria-controls="bank" aria-selected="false">Bank Details</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="leave-tab" data-bs-toggle="tab" href="#leaves" role="tab"
+                            aria-controls="leave" aria-selected="false">Leaves</a>
+                    </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade active show" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -591,6 +595,86 @@
                         
                     </div>
 
+
+                    <div class="tab-pane fade" id="leaves" role="tabpanel" aria-labelledby="general-tab">
+
+                        <div class="container">
+                            
+                                  <table width="100%" class="table table-hover" id="dataTables-example">
+                                    <thead>
+                                      <tr>
+                                        <th>Employee Code</th>
+                                        <th>Employee Name</th>
+                                        <th>Reporting Manager</th>
+                                        <th>Leave</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Period</th>
+                                        <th>Status</th>
+                          
+                                        <th>Action</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for leaves in leave_applications %}
+                          
+                                      <tr>
+                                        <td>{{leaves.employee.employee_code}}</td>
+                                        <td>
+                                          {{leaves.employee.first_name}} {{leaves.employee.last_name}}
+                                        </td>
+                                        <td>{{leaves.employee.reporting_manager}}</td>
+                                        <td>{{leaves.leave_name}}</td>
+                                        <td>{{leaves.from_date}}</td>
+                                        <td>{{leaves.to_date}}</td>
+                                        <td>{{leaves.period}}</td>
+                          
+                                        {% if leaves.status == 'Pending' %}
+                                        <td>{{leaves.status}}</td>
+                                        <td class="text-end">
+                                          <a
+                                            href="{% url 'approve_leave' leaves.id %}"
+                                            class="btn btn-outline-success btn-rounded"
+                                          >
+                                            <i class="fas fa-thumbs-up"></i>
+                                          </a>
+                                          <a
+                                            href="{% url 'reject_leave' leaves.id %}"
+                                            class="btn btn-outline-danger btn-rounded"
+                                          >
+                                            <i class="fas fa-thumbs-down"></i>
+                                          </a>
+                                        </td>
+                                        {% elif leaves.status == "Approved" %}
+                                        <td style="color: #28a745">{{leaves.status}}</td>
+                                        <td class="text-end">
+                                          <a
+                                            href="{% url 'delete_leave' leaves.id %}"
+                                            class="btn btn-outline-danger btn-rounded"
+                                          >
+                                            <i class="fas fa-trash"></i>
+                                          </a>
+                                        </td>
+                                        {% else %}
+                                        <td style="color: #dc3545">{{leaves.status}}</td>
+                          
+                                        <td class="text-end">
+                                          <a
+                                            href="{% url 'delete_leave' leaves.id %}"
+                                            class="btn btn-outline-danger btn-rounded"
+                                          >
+                                            <i class="fas fa-trash"></i>
+                                          </a>
+                                        </td>
+                                        {% endif %}
+                                      </tr>
+                          
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                               
+                        </div>
+                    </div>        
 
 
 
