@@ -32,7 +32,7 @@
     {% endif %}
     <div class="page-title">
       <h3>
-        holiday Records
+        Holiday Records
 
         <button
           type="button"
@@ -58,7 +58,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for holidays in holidays_records %}
+            {% for holiday in holidays_records %}
 
             <tr>
               <td>{{holiday.holiday_name}}</td>
@@ -108,7 +108,7 @@
                     ></button>
                   </div>
 
-                  <div class="modal-body">
+                   <div class="modal-body">
                     <div class="container mt-2">
                       <form method="post" action="{% url 'editholiday' holiday.id %}">
                         {% csrf_token %}
@@ -135,9 +135,9 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> 
            
-            <div
+            {% comment %} <div
               class="modal fade"
               id="deleteholidayModal{{holiday.id}}"
               tabindex="-1"
@@ -182,7 +182,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> {% endcomment %}
             
             {% endfor %}
           </tbody>

@@ -5,6 +5,19 @@ from django.forms import DateInput,FileInput
 from .constants import STATE_CHOICES
 
 
+class HolidayMasterForm(forms.ModelForm):
+    class Meta:
+        model = Holiday
+        fields = '__all__'
+        widgets = {
+            'holiday_name' : forms.TextInput(attrs={'class': 'form-control'}),
+            'state': forms.Select(choices=STATE_CHOICES , attrs={'class': 'form-control'}),
+            'branch' : forms.Select(attrs={'class': 'form-control'}),
+            'holiday_date' : forms.DateInput(attrs={'class': 'form-control','type': 'date'}),
+            'holiday_category': forms.Select(choices=Holiday.HOLIDAY_CHOICES , attrs={'class': 'form-control'}),
+        }
+
+
 class LeaveMasterForm(forms.ModelForm):
     class Meta:
         model =  LeaveMaster

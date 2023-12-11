@@ -10,6 +10,28 @@ from .forms import *
 
 
 @login_required(login_url='signin')
+def HolidayMaterView(request):
+    holidays_records = Holiday.objects.all()
+
+    if request.method == 'POST':
+        
+        holiday_form = HolidayMasterForm(data=request.POST)
+        
+        if holiday_form.is_valid():
+            holiday_form.save()
+            messages.success(request, "Holiday added successfully.")
+            return redirect('holiday-master')
+    else:
+        holiday_form = HolidayMasterForm()
+
+    context = {
+        'holidays_records': holidays_records,
+        'holiday_form' : holiday_form
+    }
+    return render(request,'holiday_master.html',context)
+
+
+@login_required(login_url='signin')
 def LeaveMasterView(request):
     leave_records = LeaveMaster.objects.all()
     
