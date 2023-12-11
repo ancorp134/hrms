@@ -251,8 +251,6 @@ class LeaveMaster(models.Model):
 
 class LeaveApplication(models.Model):
 
-    
-
     id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
     leave_name = models.ForeignKey(LeaveMaster,on_delete=models.CASCADE)
@@ -264,6 +262,25 @@ class LeaveApplication(models.Model):
 
 
     
+class Holiday(models.Model):
+
+    HOLIDAY_CHOICES = (
+        ('National','National'),
+        ('Festival' , 'Festival')
+    )
+
+    id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
+    holiday_name = models.CharField(max_length=50)
+    state = models.CharField(max_length=50,choices=STATE_CHOICES,blank=True,null=True)
+    branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
+    holiday_date = models.DateField()
+    holiday_category = models.CharField(max_length=50,choices=HOLIDAY_CHOICES)
+    
+
+    def __str__(self):
+        return self.holiday_name
+
+
     
 @receiver(post_save, sender=User)
 def create_employee(sender, instance, created, **kwargs):
