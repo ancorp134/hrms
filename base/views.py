@@ -30,6 +30,16 @@ def HolidayMaterView(request):
     }
     return render(request,'holiday_master.html',context)
 
+@login_required(login_url='signin')
+def deleteHoliday(request,pk):
+    if request.method == 'POST':
+        holiday = Holiday.objects.get(id = pk)
+        holiday.delete()
+        messages.success(request,"Holiday deleted Successfully")
+        return redirect("holiday-master")
+        
+    return render(request,'holiday_master.html')
+
 
 @login_required(login_url='signin')
 def LeaveMasterView(request):

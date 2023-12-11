@@ -110,7 +110,7 @@
 
                    <div class="modal-body">
                     <div class="container mt-2">
-                      <form method="post" action="{% url 'editholiday' holiday.id %}">
+                      <form method="post" action="">
                         {% csrf_token %}
                         <div class="row jumbotron box8">
                             <div class="col-sm-6 form-group mt-2">
@@ -137,7 +137,7 @@
               </div>
             </div> 
            
-            {% comment %} <div
+             <div
               class="modal fade"
               id="deleteholidayModal{{holiday.id}}"
               tabindex="-1"
@@ -182,7 +182,7 @@
                   </div>
                 </div>
               </div>
-            </div> {% endcomment %}
+            </div>
             
             {% endfor %}
           </tbody>
