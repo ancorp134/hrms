@@ -11,4 +11,5 @@ urlpatterns = [
     path('employee/leave-application/<str:pk>/delete',deleteleave.as_view(),name='leave-delete'),
     path('employee/leave-application/<str:pk>/approve',approveleave.as_view(),name='approve-delete'),
     path('employee/leave-application/<str:pk>/reject',rejectleave.as_view(),name='reject-delete'),
+    path('holidays/',HolidayView.as_view(),name='holidays')
 ]

@@ -54,17 +54,7 @@ class LeaveApplicationView(APIView):
     parser_classes  = [JSONParser]
 
 
-    def delete(self,request,pk):
-        try:
-            leave_record = get_object_or_404(LeaveApplication,id=pk)
-            leave_record.delete()
-            return Response({
-                "status" : "success",
-            })
-        except:
-            return Response({
-                "status" : "error",
-            })
+   
 
     def get(self, request):
         try:
@@ -151,6 +141,28 @@ class deleteleave(APIView):
             return Response({
                 "status" : "error",
             })
+
+
+
+class HolidayView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser]
+
+    def get(self,request):
+    
+        try:
+            employee = Employee.objects.get(user=request.user)
+            holiday = Holiday.objects.filter(branch = employee.branch)
+
+            serializer = HolidaySerializer(holiday,many = True)
+            return Response({
+                "holidays": serializer.data  # Return serialized data
+            })
+        except Employee.DoesNotExist:
+            return Response({
+                "status": "No data is available"
+        })    
+        
 
 
 
