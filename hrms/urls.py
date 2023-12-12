@@ -38,7 +38,8 @@ urlpatterns = [
     path('leave/leave-applications/reject/<str:pk>/', views.reject_leave, name='reject_leave'),
     path('leave/leave-applications/delete/<str:pk>/', views.delete_leave, name='delete_leave'),
     path('master/holiday-master/',views.HolidayMaterView,name="holiday-master"),
-    path('master/holiday-master/<str:pk>/delete',views.deleteHoliday,name="deleteholiday")
+    path('master/holiday-master/<str:pk>/delete',views.deleteHoliday,name="deleteholiday"),
+    path('master/holiday-master/<str:pk>/edit',views.editHoliday,name="editholiday"),
    
 ]
 

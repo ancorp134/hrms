@@ -32,7 +32,7 @@
     {% endif %}
     <div class="page-title">
       <h3>
-        Holiday Records
+        Holiday Record(s)
 
         <button
           type="button"
@@ -110,12 +110,65 @@
 
                    <div class="modal-body">
                     <div class="container mt-2">
-                      <form method="post" action="">
+                      <form method="post" action="{% url 'editholiday' holiday.id %}">
                         {% csrf_token %}
                         <div class="row jumbotron box8">
                             <div class="col-sm-6 form-group mt-2">
-                                
+                              <label for="id_holiday_name">Holiday Name:</label>
+                              {% if holiday.holiday_name %}
+                              <input type="text" id="id_holiday_name" name="holiday_name" class="form-control" value="{{ holiday.holiday_name }}">
+                              {% else %}
+                              <input type="text" id="id_holiday_code" name="holiday_name" class="form-control">
+                              {% endif %}
                             </div>
+                            <div class="col-sm-6 form-group mt-2">
+                              <label for="id_holiday_state">State:</label>
+                              <select id="id_holiday_state" name="state" class="form-control">
+                                  {% for choice in holiday_form.state.field.choices %}
+                                      {% if choice.0 == holiday.state %}
+                                          <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+                                      {% else %}
+                                          <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                      {% endif %}
+                                  {% endfor %}
+                              </select>
+                            </div>
+                            <div class="col-sm-6 form-group mt-2">
+                              <label for="id_holiday_branch">Branch:</label>
+                              <select id="id_holiday_branch" name="branch" class="form-control">
+                                  {% for choice in holiday_form.branch.field.choices %}
+                                      {% if choice.0 == holiday.branch.id %}
+                                          <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+                                      {% else %}
+                                          <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                      {% endif %}
+                                  {% endfor %}
+                              </select>
+                          </div>
+                          <div class="col-sm-6 form-group mt-2">
+                            <label for="Date">Holiday Date:</label>
+                            {% if holiday.holiday_date %}
+                            <input type="date" name="holiday_date" class="form-control" id="Date"
+                                value="{{ holiday.holiday_date | date:'Y-m-d' }}" required>
+                            {% else %}
+                            <input type="date" name="holiday_date" class="form-control" id="Date" placeholder=""
+                                required>
+                            {% endif %}
+
+                        </div>
+                        
+                          <div class="col-sm-6 form-group mt-2">
+                            <label for="id_holiday_category">Holiday category:</label>
+                            <select id="id_holiday_category" name="holiday_category" class="form-control">
+                                {% for choice in holiday_form.holiday_category.field.choices %}
+                                    {% if choice.0 == holiday.holiday_category %}
+                                        <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+                                    {% else %}
+                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
                         </div>
 
                         <div class="modal-footer">

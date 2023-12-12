@@ -30,6 +30,31 @@ def HolidayMaterView(request):
     }
     return render(request,'holiday_master.html',context)
 
+
+@login_required(login_url='signin')
+def editHoliday(request,pk):
+    holiday = get_object_or_404(Holiday,id=pk)
+
+    if request.method == 'POST':
+        holiday_name = request.POST.get('holiday_name')
+        state = request.POST.get('state')
+        branch = request.POST.get('branch')
+        holiday_date = request.POST.get('holiday_date')
+        holiday_category = request.POST.get('holiday_category')
+
+        holiday.holiday_name = holiday_name
+        holiday.state = state
+        branch_id = request.POST.get('branch')
+        branch = get_object_or_404(Branch, id=branch_id)
+        holiday.branch = branch
+        holiday.holiday_date = holiday_date
+        holiday.holiday_category = holiday_category
+        holiday.save()
+        messages.success(request,"Holiday Updated Successfully")
+        return redirect("holiday-master")
+        
+    return render(request,'holiday_master.html')
+
 @login_required(login_url='signin')
 def deleteHoliday(request,pk):
     if request.method == 'POST':
