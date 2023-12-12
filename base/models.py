@@ -260,7 +260,8 @@ class LeaveApplication(models.Model):
     reason = models.CharField(max_length=200,blank=True,null=True)
     status = models.CharField(max_length=50,default="Pending",blank=True,null=True)
 
-
+    def __str__(self):
+        return self.employee.user.username
     
 class Holiday(models.Model):
 
