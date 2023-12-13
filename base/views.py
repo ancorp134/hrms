@@ -135,8 +135,13 @@ def editLeave(request, pk):
 @login_required(login_url='sigin')
 def LeaveApplicationView(request):
     leave_applications = LeaveApplication.objects.all()
+    branchs = Branch.objects.all()
+
+
+    
     context = {
-        'leave_applications' : leave_applications
+        'leave_applications' : leave_applications,
+        'branchs': branchs, 
     }
 
     return render(request,'leave_applications.html',context)

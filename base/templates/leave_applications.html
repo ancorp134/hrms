@@ -34,18 +34,46 @@
     {% endif %}
     <div class="page-title">
       <h3>
-        Leave Application(s) {% comment %}
-        <button
-          type="button"
-          class="btn btn-sm btn-outline-primary float-end"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          &nbsp;<i class="fas fa-user-shield"></i>Add User
-        </button>
-        {% endcomment %}
-      </h3>
+        Leave Application(s)
+        </h3>
     </div>
+
+    <form method="get" action="{% url 'employees' %}">
+      <div class="row">
+        <div class="col-sm-2 form-group mt-2 mb-2">
+          <select class="form-control" name="branch">
+              <option value="">All Branches</option>
+              {% for branch in branchs %}
+                  <option value="{{ branch.branch_name }}">{{ branch.branch_name }}</option>
+              {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-2 form-group mt-2 mb-2">
+          <input class="form-control" type="text" name="employee_name" placeholder="Search by Employee Name">
+        </div>
+        <div class="col-sm-2 form-group mt-2 mb-2">
+          <select class="form-select" id="month" name="month">
+            <option value="">Select Month</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group mt-2 mb-2">
+          <button type="submit" class="btn btn-secondary">Apply Filters</button>
+        </div>
+        
+    </div>
+  </form>
     <div class="box box-primary">
       <div class="box-body">
         <table width="100%" class="table table-hover" id="dataTables-example">
