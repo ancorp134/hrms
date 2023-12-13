@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import *
+from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 @login_required(login_url='signin')
@@ -420,6 +422,14 @@ def EmployeeView(request):
     # Handling GET request
     if request.method == 'GET':
         try:
+
+            branch_filter = request.GET.get('branch')
+            if branch_filter:
+                employees = employees.filter(branch__branch_name=branch_filter)
+            
+            employee_name = request.GET.get('employee_name')
+            if employee_name:
+                employees = employees.filter(Q(first_name__icontains=employee_name) | Q(last_name__icontains=employee_name))
             # Get the last employee code and extract numeric part for increment
             last_employee = Employee.objects.order_by('-employee_code').first()
             if last_employee:
@@ -428,6 +438,20 @@ def EmployeeView(request):
                     numeric_part = int(''.join(filter(str.isdigit, last_code)))
         except Employee.DoesNotExist:
             pass  # Handle the case when no Employee objects exist
+    
+    items_per_page = 5
+
+    # Pagination
+    paginator = Paginator(employees, items_per_page)
+    page = request.GET.get('page')
+
+    try:
+        employees = paginator.page(page)
+    except PageNotAnInteger:
+        employees = paginator.page(1)
+    except EmptyPage:
+        employees = paginator.page(paginator.num_pages)
+    
     
     # Create context for the form with necessary data
     context = {
