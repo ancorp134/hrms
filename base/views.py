@@ -497,6 +497,7 @@ def EmployeeView(request):
     items_per_page = 5
 
     # Pagination
+    employees = employees.order_by('id')
     paginator = Paginator(employees, items_per_page)
     page = request.GET.get('page')
 
