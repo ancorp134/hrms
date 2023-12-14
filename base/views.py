@@ -133,16 +133,12 @@ def editLeave(request, pk):
 
 
 
-@login_required(login_url='sigin')
+@login_required(login_url='signin')
 def LeaveApplicationView(request):
     leave_applications = LeaveApplication.objects.all()
     branchs = Branch.objects.all()
     curr_year = datetime.date.today().year
     year_range = range(curr_year-15, curr_year + 1)
-
-
-    
-
 
     # Filtering by month
     month = request.GET.get('month')
@@ -173,8 +169,6 @@ def LeaveApplicationView(request):
     selected_status = request.GET.get('status')
     if selected_status:
         leave_applications = leave_applications.filter(status=selected_status)
-
-    
 
     items_per_page = 5
 
@@ -428,11 +422,6 @@ def editBranch(request, pk):
 
     
     return render(request, 'branch-master.html')
-
-
-
-
-
 
 
 def LoginView(request):
