@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_countries',
     'api',
     'rest_framework_simplejwt',
+    'fontawesomefree',
 ]
 
 REST_FRAMEWORK = {

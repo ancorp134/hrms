@@ -38,10 +38,11 @@
         </h3>
     </div>
 
-    <form method="get" action="{% url 'leave-applications' %}">
+    <form method="get" action="{% url 'leave-applications' %}" id="filterform">
+      
       <div class="row">
         <div class="col-sm-2 form-group mt-2 mb-2">
-          <select class="form-control" name="branch">
+          <select class="form-control" name="branch" id="branch">
               <option value="">All Branches</option>
               {% for branch in branchs %}
                   <option value="{{ branch.branch_name }}">{{ branch.branch_name }}</option>
@@ -49,38 +50,49 @@
           </select>
         </div>
         <div class="col-sm-2 form-group mt-2 mb-2">
-          <input class="form-control" type="text" name="employee_name" placeholder="Search by Employee Name">
+          <input class="form-control" type="text" name="employee_name" placeholder="Search by Employee Name"/>
         </div>
         <div class="col-sm-2 form-group mt-2 mb-2">
           <select class="form-select" id="month" name="month">
-            <option value="">Select Month</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
+            <option value="" >Select Month</option>
+            <option value="1" {% if month == "1" %} selected {% endif %} >January</option>
+            <option value="2" {% if month == "2" %} selected {% endif %} >February</option>
+            <option value="3" {% if month == "3" %} selected {% endif %} >March</option>
+            <option value="4" {% if month == "4" %} selected {% endif %} >April</option>
+            <option value="5" {% if month == "5" %} selected {% endif %} >May</option>
+            <option value="6" {% if month == "6" %} selected {% endif %} >June</option>
+            <option value="7" {% if month == "7" %} selected {% endif %} >July</option>
+            <option value="8" {% if month == "8" %} selected {% endif %} >August</option>
+            <option value="9" {% if month == "9" %} selected {% endif %}  >September</option>
+            <option value="10" {% if month == "10" %} selected {% endif %} >October</option>
+            <option value="11" {% if month == "11" %} selected {% endif %} >November</option>
+            <option value="12" {% if month == "12" %} selected {% endif %} >December</option>
           </select>
         </div>
         <div class="col-sm-2 form-group mt-2 mb-2">
-          <select class="form-select" id="month" name="year">
+          <select class="form-select" id="year" name="year">
               <option value="">Select Year</option>
               {% for year in year_range %}
-                  <option value="{{ year }}">{{ year }}</option>
+                  <option value="{{ year }}" >{{ year }}</option>
               {% endfor %}
           </select>
       </div>
-        <div class="col-sm-2 form-group mt-2 mb-2">
-          <button type="submit" class="btn btn-secondary">Apply Filters</button>
-        </div>
-        
+      <div class="col-sm-2 form-group mt-2 mb-2">
+        <select class="form-select" id="status" name="status">
+            <option value="">Select Status</option>
+            <option value="Pending" {% if selected_status == "Pending" %} selected {% endif %}>Pending</option>
+            <option value="Approved" {% if selected_status == "Approved" %} selected {% endif %} >Approved</option>
+            <option value="Rejected" {% if selected_status == "Rejected" %} selected {% endif %} >Rejected</option>
+        </select>
     </div>
+        <div class="col-sm-1 form-group mt-2 mb-2">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <div class="col-sm-1 form-group mt-2 mb-2">
+          <a href="{% url 'leave-applications' %}" class="btn btn-secondary" title="Remove Filters"><i class="fa-solid fa-filter-circle-xmark"></i></i></a>
+        </div>
+    </div>
+
   </form>
     <div class="box box-primary">
       <div class="box-body">
@@ -117,13 +129,13 @@
               {% if leaves.status == 'Pending' %}
               <td>{{leaves.status}}</td>
               <td class="text-end">
-                <a
+                <a title="Approve Leave"
                   href="{% url 'approve_leave' leaves.id %}"
                   class="btn btn-outline-success btn-rounded"
                 >
                   <i class="fas fa-thumbs-up"></i>
                 </a>
-                <a
+                <a title="Reject Leave"
                   href="{% url 'reject_leave' leaves.id %}"
                   class="btn btn-outline-danger btn-rounded"
                 >
@@ -203,5 +215,33 @@
 
   </div>
 </div>
+
+<script>
+ 
+  const selectedYear = "{{ selected_year }}"; 
+  const selectedBranch = "{{branch}}"
+  
+ 
+  window.addEventListener('DOMContentLoaded', function() {
+      const year = document.getElementById('year');
+      if (selectedYear) {
+          for (let i = 0; i < year.options.length; i++) {
+              if (year.options[i].value === selectedYear) {
+                  year.options[i].setAttribute('selected', 'selected');
+                  break;
+              }
+          }
+      }
+
+      const branch = document.getElementById('branch')
+      if (selectedBranch){
+        for(let i = 0; i< branch.options.length; i++){
+          if(branch.options[i].value == selectedBranch){
+            branch.options[i].setAttribute('selected','selected')
+          }
+        }
+      }
+  });
+</script>
 
 {% endblock %}

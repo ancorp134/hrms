@@ -125,7 +125,7 @@
                             <div class="col-sm-6 form-group mt-2">
                                 <label for="id_branch_name">Branch Name:</label>
                                 {% if branch.branch_name %}
-                                <input type="text" id="id_branch_name" name="branch_name" class="form-control" value="{{ branch.branch_name }}">
+                                <input type="text" id="id_branch_name" name="branch_name" class="form-control" value="{{ branch.branch_name }}"/>
                                 {% else %}
                                 <input type="text" id="id_branch_code" name="branch_name" class="form-control">
                                 {% endif %}
@@ -133,7 +133,7 @@
                                <div class="col-sm-6 form-group mt-2">
                                 <label for="id_branch_code">Branch code:</label>
                                 {% if branch.branch_code %}
-                                <input type="text" id="id_branch_code" name="branch_code" class="form-control" value="{{ branch.branch_code }}">
+                                <input type="text" id="id_branch_code" name="branch_code" class="form-control" value="{{ branch.branch_code }}"/>
                                 {% else %}
                                 <input type="text" id="id_branch_code" name="branch_code" class="form-control">
                                 {% endif %}
@@ -141,7 +141,7 @@
                                <div class="col-sm-12 form-group mt-2">
                                 <label >Address</label>
                                 {% if branch.address %}
-                                <input type="text" id="id_branch_address" name="address" class="form-control" value="{{ branch.address }}">
+                                <input type="text" id="id_branch_address" name="address" class="form-control" value="{{ branch.address }}"/>
                                 {% else %}
                                 <input type="text" id="id_branch_address" name="address" class="form-control">
                                 {% endif %}
@@ -149,7 +149,7 @@
                                <div class="col-sm-6 form-group mt-2">
                                 <label >Tehsil</label>
                                 {% if branch.tehsil %}
-                                <input type="text" id="id_branch_tehsil" name="tehsil" class="form-control" value="{{ branch.tehisl }}">
+                                <input type="text" id="id_branch_tehsil" name="tehsil" class="form-control" value="{{ branch.tehisl }}"/>
                                 {% else %}
                                 <input type="text" id="id_branch_tehsil" name="tehsil" class="form-control">
                                 {% endif %}
@@ -157,7 +157,7 @@
                                <div class="col-sm-6 form-group mt-2">
                                 <label >District</label>
                                 {% if branch.district %}
-                                <input type="text" id="id_branch_district" name="district" class="form-control" value="{{ branch.district }}">
+                                <input type="text" id="id_branch_district" name="district" class="form-control" value="{{ branch.district }}"/>
                                 {% else %}
                                 <input type="text" id="id_branch_district" name="district" class="form-control">
                                 {% endif %}
@@ -165,7 +165,7 @@
                                <div class="col-sm-6 form-group mt-2">
                                 <label>City</label>
                                 {% if branch.city %}
-                                <input type="text" id="id_branch_city" name="city" class="form-control" value="{{ branch.city }}">
+                                <input type="text" id="id_branch_city" name="city" class="form-control" value="{{ branch.city }}"/>
                                 {% else %}
                                 <input type="text" id="id_branch_city" name="city" class="form-control">
                                 {% endif %}
@@ -197,7 +197,7 @@
                             
                                <div class="col-sm-4 form-group mt-2">
                                 <label for="is_active">Active</label>
-                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="status" {% if branch.status %} checked {% endif %}>
+                                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" name="status" {% if branch.status %} checked {% endif %}/>
                             </div>
                         </div>
 

@@ -141,15 +141,18 @@ def LeaveApplicationView(request):
     year_range = range(curr_year-15, curr_year + 1)
 
 
+    
+
+
     # Filtering by month
     month = request.GET.get('month')
     if month:
        leave_applications = leave_applications.filter(from_date__month=month)
 
     # Filteing by year
-    year = request.GET.get('year')
-    if year:
-        leave_applications = leave_applications.filter(from_date__year=year)
+    selected_year = request.GET.get('year')
+    if selected_year:
+        leave_applications = leave_applications.filter(from_date__year=selected_year)
 
     # Filtering by branch
     branch = request.GET.get('branch')
@@ -166,6 +169,10 @@ def LeaveApplicationView(request):
     if employees:
         employee_ids = employees.values_list('id', flat=True)
         leave_applications = leave_applications.filter(employee__id__in=employee_ids)
+    
+    selected_status = request.GET.get('status')
+    if selected_status:
+        leave_applications = leave_applications.filter(status=selected_status)
 
     
 
@@ -188,9 +195,17 @@ def LeaveApplicationView(request):
         'branchs': branchs,
         'curr_year': curr_year,
         'year_range': year_range,
+        'selected_status': selected_status,
+        'employee_name' : employee_name,
+        'branch' : branch,
+        'selected_year' :selected_year,
+        'month' : month
     }
 
     return render(request, 'leave_applications.html', context)
+
+
+
 
 @login_required(login_url='signin')
 def approve_leave(request,pk):
