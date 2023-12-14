@@ -822,6 +822,7 @@ def employeeProfileView(request , pk):
     
     # Create context for the form with necessary data
     
+    
     context = {
         'employee': employee,
         'emp_branch_code' : emp_branch_code,
@@ -838,7 +839,7 @@ def employeeProfileView(request , pk):
         'immigration_documents': immigration_documents,
         'bank_form' : bank_form,
         'bank_records' : bank_records,
-        'leave_applications' : leaves_applications,
+       
     }
     return render(request,'employee_profile.html',context)
 
