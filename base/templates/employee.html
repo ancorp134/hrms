@@ -24,23 +24,25 @@
     <div class="page-title">
       <h3>Employees</h3>
     </div>
-      <form method="get" action="{% url 'employees' %}">
+      <form method="get" action="{% url 'employees' %}" id="filterform">
         <div class="row">
           <div class="col-sm-3 form-group mt-2 mb-2">
-            <select class="form-control" name="branch">
+            <select class="form-control" name="branch" id="branch">
                 <option value="">All Branches</option>
                 {% for branch in branchs %}
                     <option value="{{ branch.branch_name }}">{{ branch.branch_name }}</option>
                 {% endfor %}
             </select>
           </div>
-          <div class="col-sm-3 form-group mt-2 mb-2">
-            <input class="form-control" type="text" name="employee_name" placeholder="Search by Employee Name">
+          <div class="col-sm-2 form-group mt-2 mb-2">
+            <input class="form-control" type="text" name="employee_name"  {% if employee_name %} value="{{employee_name}}" {% else %} placeholder="Search by Employee" {% endif %} />
+        </div>
+          <div class="col-sm-1 form-group mt-2 mb-2">
+            <button type="submit" class="btn btn-secondary">Search</button>
           </div>
-          <div class="col-sm-3 form-group mt-2 mb-2">
-            <button type="submit" class="btn btn-secondary">Apply Filters</button>
+          <div class="col-sm-1 form-group mt-2 mb-2">
+            <a href="{% url 'employees' %}" class="btn btn-secondary" title="Remove Filters"><i class="fa-solid fa-filter-circle-xmark"></i></i></a>
           </div>
-          
       </div>
     </form>
     <div class="box box-primary">
@@ -108,7 +110,7 @@
             {% endfor %}
             {% else %}
             <tr>
-              <td>No Employee Found</td>
+              <td>No Record Found</td>
             </tr>
 
             {% endif %}
@@ -156,6 +158,22 @@
   </div>
 </div>
 
-
+<script>
+ 
+  
+  const selectedBranch = "{{selected_branch}}"
+  
+ 
+  window.addEventListener('DOMContentLoaded', function() {
+   const branch = document.getElementById('branch')
+      if (selectedBranch){
+        for(let i = 0; i< branch.options.length; i++){
+          if(branch.options[i].value == selectedBranch){
+            branch.options[i].setAttribute('selected','selected')
+          }
+        }
+      }
+  });
+</script>
 
 {% endblock %}

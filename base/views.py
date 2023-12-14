@@ -478,9 +478,9 @@ def EmployeeView(request):
     if request.method == 'GET':
         try:
 
-            branch_filter = request.GET.get('branch')
-            if branch_filter:
-                employees = employees.filter(branch__branch_name=branch_filter)
+            seleted_branch = request.GET.get('branch')
+            if seleted_branch:
+                employees = employees.filter(branch__branch_name=seleted_branch)
             
             employee_name = request.GET.get('employee_name')
             if employee_name:
@@ -515,6 +515,8 @@ def EmployeeView(request):
         'designations': designations,
         'departments': departments,
         'branchs': branchs, 
+        'selected_branch' : seleted_branch,
+        'employee_name' : employee_name
     }
     
     return render(request, 'employee.html', context)
