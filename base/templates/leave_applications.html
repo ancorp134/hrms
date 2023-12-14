@@ -38,7 +38,7 @@
         </h3>
     </div>
 
-    <form method="get" action="{% url 'employees' %}">
+    <form method="get" action="{% url 'leave-applications' %}">
       <div class="row">
         <div class="col-sm-2 form-group mt-2 mb-2">
           <select class="form-control" name="branch">
@@ -54,20 +54,28 @@
         <div class="col-sm-2 form-group mt-2 mb-2">
           <select class="form-select" id="month" name="month">
             <option value="">Select Month</option>
-            <option value="01">January</option>
-            <option value="02">February</option>
-            <option value="03">March</option>
-            <option value="04">April</option>
-            <option value="05">May</option>
-            <option value="06">June</option>
-            <option value="07">July</option>
-            <option value="08">August</option>
-            <option value="09">September</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
             <option value="10">October</option>
             <option value="11">November</option>
             <option value="12">December</option>
           </select>
         </div>
+        <div class="col-sm-2 form-group mt-2 mb-2">
+          <select class="form-select" id="month" name="year">
+              <option value="">Select Year</option>
+              {% for year in year_range %}
+                  <option value="{{ year }}">{{ year }}</option>
+              {% endfor %}
+          </select>
+      </div>
         <div class="col-sm-2 form-group mt-2 mb-2">
           <button type="submit" class="btn btn-secondary">Apply Filters</button>
         </div>
@@ -92,6 +100,7 @@
             </tr>
           </thead>
           <tbody>
+            {% if leave_applications %}
             {% for leaves in leave_applications %}
 
             <tr>
@@ -144,12 +153,54 @@
               </td>
               {% endif %}
             </tr>
-
+           
             {% endfor %}
+            {% else %}
+            <tr>
+              <td>No Record Found</td>
+            </tr>
+
+            {% endif %}
+            
           </tbody>
         </table>
       </div>
     </div>
+
+    <nav aria-label="Leaves Application Pagination">
+      <ul class="pagination ">
+          {% if leave_applications.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?page=1" aria-label="First">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ leave_applications.previous_page_number }}" aria-label="Previous">
+                      <span aria-hidden="true">&lt;</span>
+                  </a>
+              </li>
+          {% endif %}
+  
+          <li class="page-item disabled">
+              <span class="page-link">Page {{ leave_applications.number }} of {{ leave_applications.paginator.num_pages }}</span>
+          </li>
+  
+          {% if leave_applications.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ leave_applications.next_page_number }}" aria-label="Next">
+                      <span aria-hidden="true">&gt;</span>
+                  </a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ leave_applications.paginator.num_pages }}" aria-label="Last">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+      </ul>
+  </nav>
+
   </div>
 </div>
 

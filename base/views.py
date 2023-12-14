@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from .forms import *
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import datetime
 
 
 @login_required(login_url='signin')
@@ -136,15 +137,60 @@ def editLeave(request, pk):
 def LeaveApplicationView(request):
     leave_applications = LeaveApplication.objects.all()
     branchs = Branch.objects.all()
+    curr_year = datetime.date.today().year
+    year_range = range(curr_year-15, curr_year + 1)
 
+
+    # Filtering by month
+    month = request.GET.get('month')
+    if month:
+       leave_applications = leave_applications.filter(from_date__month=month)
+
+    # Filteing by year
+    year = request.GET.get('year')
+    if year:
+        leave_applications = leave_applications.filter(from_date__year=year)
+
+    # Filtering by branch
+    branch = request.GET.get('branch')
+    if branch:
+        leave_applications = leave_applications.filter(employee__branch__branch_name = branch)
+
+    employee_name = request.GET.get('employee_name')
+    employees=None
+    if employee_name:
+        employees = Employee.objects.filter(
+         Q(first_name__icontains=employee_name) | Q(last_name__icontains=employee_name)
+    )
+
+    if employees:
+        employee_ids = employees.values_list('id', flat=True)
+        leave_applications = leave_applications.filter(employee__id__in=employee_ids)
 
     
+
+    items_per_page = 5
+
+    # Pagination
+    paginator = Paginator(leave_applications, items_per_page)
+    page = request.GET.get('page')
+
+    try:
+        leave_applications = paginator.page(page)
+    except PageNotAnInteger:
+        leave_applications = paginator.page(1)
+    except EmptyPage:
+        leave_applications = paginator.page(paginator.num_pages)
+
+
     context = {
-        'leave_applications' : leave_applications,
-        'branchs': branchs, 
+        'leave_applications': leave_applications,
+        'branchs': branchs,
+        'curr_year': curr_year,
+        'year_range': year_range,
     }
 
-    return render(request,'leave_applications.html',context)
+    return render(request, 'leave_applications.html', context)
 
 @login_required(login_url='signin')
 def approve_leave(request,pk):
