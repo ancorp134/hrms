@@ -29,18 +29,18 @@ urlpatterns = [
     path('users/<int:pk>/delete',views.deleteUser,name='deleteuser'),
     path('employees/<str:pk>/profile',views.employeeProfileView, name='employee_profile'),
     path('employees/<str:pk1>/profile/document/<str:pk2>/delete',views.deleteDocument, name='delete_document'),
-    path('api/',include('api.urls')),
     path('leave/leave-master/',views.LeaveMasterView,name='leave-master'),
     path('laeve/leave-master/<str:pk>/delete',views.deleteLeave,name="deleteleave"),
     path('leave/leave-master/<str:pk>/edit',views.editLeave,name="editleave"),
-    path('leave/leave-applications',views.LeaveApplicationView,name="leave-applications"),
+    path('leave/leave-applications/',views.LeaveApplicationView,name="leave-applications"),
     path('leave/leave-applications/approve/<str:pk>/', views.approve_leave, name='approve_leave'),
     path('leave/leave-applications/reject/<str:pk>/', views.reject_leave, name='reject_leave'),
     path('leave/leave-applications/delete/<str:pk>/', views.delete_leave, name='delete_leave'),
     path('master/holiday-master/',views.HolidayMaterView,name="holiday-master"),
     path('master/holiday-master/<str:pk>/delete',views.deleteHoliday,name="deleteholiday"),
     path('master/holiday-master/<str:pk>/edit',views.editHoliday,name="editholiday"),
-   
+   # api urls
+    path('api/',include('api.urls')),
 ]
 
 if settings.DEBUG:
