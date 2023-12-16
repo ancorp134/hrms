@@ -812,7 +812,6 @@ def employeeProfileView(request , pk):
         personal_info, created = PersonalInformation.objects.get_or_create(employee=employee)
         employee_documents= RequiredDocument.objects.filter(employee=employee)
         immigration_documents = Immigration.objects.filter(employee=employee)
-        leaves_applications = LeaveApplication.objects.filter(employee=employee)
         bank_records = BankDetails.objects.filter(employee=employee)
         form = PersonalInformationForm(instance=personal_info)
         document_form = DocumentForm()
