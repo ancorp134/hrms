@@ -331,6 +331,8 @@ def deleteDesignation(request,pk):
         
     return render(request,'designation-master.html')
 
+
+
 @login_required(login_url='signin')
 def editDesignation(request, pk):
     designation = get_object_or_404(Designation, id=pk)
@@ -825,9 +827,9 @@ def employeeProfileView(request , pk):
                 if last_code and any(char.isdigit() for char in last_code):
                     numeric_part = int(''.join(filter(str.isdigit, last_code)))
         except Employee.DoesNotExist:
-            pass  # Handle the case when no Employee objects exist
+            pass 
     
-    # Create context for the form with necessary data
+    
     
     
     context = {
