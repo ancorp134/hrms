@@ -28,6 +28,20 @@
                     data-bs-target="#exampleModal">&nbsp;<i class="fas fa-user-shield"></i>Add User</button>
             </h3>
         </div>
+        <form method="get" action="{% url 'users' %}">
+          <div class="row">
+            
+            <div class="col-sm-2 form-group mt-2 mb-2">
+              <input class="form-control" type="text" name="username"  placeholder="Search by Username" />
+          </div>
+            <div class="col-sm-1 form-group mt-2 mb-2">
+              <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+            <div class="col-sm-1 form-group mt-2 mb-2">
+              <a href="{% url 'users' %}" class="btn btn-secondary" title="Remove Filters"><i class="fa-solid fa-filter-circle-xmark"></i></i></a>
+            </div>
+        </div>
+      </form>
         <div class="box box-primary">
             <div class="box-body">
                 <table width="100%" class="table table-hover" id="dataTables-example">
