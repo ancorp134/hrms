@@ -82,10 +82,9 @@ class Employee(models.Model):
     id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE,editable=False)
     employee_code = models.CharField(max_length=20,unique=True,null=True,blank=True)
-    first_name = models.CharField(max_length=100 ,null=True,blank=True)
+    
     middle_name = models.CharField(max_length=100,blank=True,null=True)
-    last_name = models.CharField(max_length=100 , null=True,blank=True)
-    email = models.CharField(max_length=100, null=True,blank=True , unique=True)
+   
     official_email= models.CharField(max_length=100, blank=True , null=True , unique=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     punching_code = models.IntegerField(unique=True , null=True , blank=True)

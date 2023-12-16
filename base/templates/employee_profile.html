@@ -60,13 +60,10 @@
 
                                     <div class="col-sm-3 form-group mt-2">
                                         <label for="firstname">First Name*</label>
-                                        {% if employee.first_name %}
+                                        
                                         <input type="text" class="form-control" name="first_name"
-                                            value="{{employee.first_name}}" required>
-                                        {% else %}
-                                        <input type="text" class="form-control" name="first_name"
-                                            placeholder="Enter First Name" required>
-                                        {% endif %}
+                                            value="{{employee.user.first_name}}" disabled />
+                                        
                                     </div>
                                     <div class="col-sm-3 form-group mt-2">
                                         <label for="middle_name">Middle Name</label>
@@ -80,23 +77,13 @@
                                     </div>
                                     <div class="col-sm-3 form-group mt-2">
                                         <label for="last_name">Last Name*</label>
-                                        {% if employee.last_name %}
                                         <input type="text" class="form-control" name="last_name"
-                                            value="{{employee.last_name}}" required>
-                                        {% else %}
-                                        <input type="text" class="form-control" name="last_name"
-                                            placeholder="Enter Last Name" required>
-                                        {% endif %}
+                                            value="{{employee.user.last_name}}" disabled />
                                     </div>
                                     <div class="col-sm-5 form-group mt-2">
                                         <label for="email">Email*</label>
-                                        {% if employee.email %}
                                         <input type="email" class="form-control" name="email"
-                                            value="{{ employee.email }}" required>
-                                        {% else %}
-                                        <input type="email" class="form-control" name="email" placeholder="Enter Email"
-                                            required>
-                                        {% endif %}
+                                            value="{{ employee.user.email }}" disabled>
                                     </div>
                                     <div class="col-sm-5 form-group mt-2">
                                         <label for="official_email">Official Email</label>

@@ -699,21 +699,21 @@ def employeeProfileView(request , pk):
                 messages.error(request,"Something went wrong....")
         
         if 'general_information' in request.POST:
-            email = request.POST.get('email')
+            
             
             official_email = request.POST.get('official_email')
             
             official_email_exist = Employee.objects.filter(official_email=official_email)
-            email_exist = Employee.objects.filter(email=email)
-            if email_exist and email != employee.email  or official_email_exist and official_email!= employee.official_email:
+           
+            if  official_email_exist and official_email!= employee.official_email:
                 messages.error(request,"Employee is already reistered with this email...")
                 return redirect('employee_profile',pk=employee.id)
             else:
-                employee.email = email
+                
                 employee.official_email = official_email
-            employee.first_name = request.POST.get('first_name')
+            
             employee.middle_name = request.POST.get('middle_name')
-            employee.last_name = request.POST.get('last_name')
+            
             employee.gender = request.POST.get('gender')
             branch_id = request.POST.get('branch')
         
