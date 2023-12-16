@@ -2,32 +2,36 @@
 
 {% load static %}
 
+{% block title %}
+<title>HRMS | Employees</title>
+{% endblock %}
+
 {% block start %}
 
 <div class="content">
     <div class="container">
-        {% if messages %}
-        {% for message in messages %}
-            {% if message.tags == 'error' %}
-            <div class="alert bg-warning alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% else %}
-            <div class="alert bg-primary alert-dismissible fade show text-white" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endif %}
-        {% endfor %}
-        {% endif %}
-        <div class="page-title">
-            <h3>Users
-
-                <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">&nbsp;<i class="fas fa-user-shield"></i>Add User</button>
-            </h3>
+      <div class="page-title">
+        <h3>Employees
+          
+          <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal"
+          data-bs-target="#exampleModal">&nbsp;<i class="fas fa-user-shield"></i>Add Employee</button>
+        </h3>
+      </div>
+      {% if messages %}
+      {% for message in messages %}
+          {% if message.tags == 'error' %}
+          <div class="alert bg-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+          {% else %}
+          <div class="alert bg-info alert-dismissible fade show text-white" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+      {% endfor %}
+      {% endif %}
         <form method="get" action="{% url 'users' %}">
           <div class="row">
             
@@ -157,11 +161,11 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteUserModalLabel">Confirm User Deletion</h5>
+                                        <h5 class="modal-title" id="deleteUserModalLabel">Confirm employee Deletion</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure you want to delete user <strong>{{ user.username }}</strong>?</p>
+                                        <p>Are you sure you want to delete employee <strong>{{ user.username }}</strong>?</p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -187,7 +191,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Add User</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Employee</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
        

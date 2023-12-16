@@ -424,6 +424,7 @@ def editBranch(request, pk):
     return render(request, 'branch-master.html')
 
 
+
 def LoginView(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -437,13 +438,17 @@ def LoginView(request):
         if user is not None:
             if user.is_superuser:
                 login(request, user)
-                return redirect(reverse('dashboard'))
+                return redirect('dashboard')
             else:
                 messages.error(request, "You are not authorized to access this page.")
         else:
-            messages.error(request, "Invalid credentials")
+            messages.error(request, "Invalid Username or Password")
+        
+        # Redirect to the login page to avoid form resubmission on page reload
+        return redirect('signin')
 
     return render(request, 'login.html')
+
 
 
 
