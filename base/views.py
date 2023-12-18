@@ -704,6 +704,7 @@ def employeeProfileView(request , pk):
                 return redirect('employee_profile',pk=employee.id)
             else:
                 messages.error(request,"Something went wrong....")
+                
         
         if 'general_information' in request.POST:
             
@@ -800,6 +801,7 @@ def employeeProfileView(request , pk):
                 return redirect('employee_profile',pk=employee.id)
             else:
                 messages.error(request,"Something went wrong....")
+                return redirect('employee_profile',pk=employee.id)
 
     employees_list = Employee.objects.all()
     branchs = Branch.objects.all()
@@ -807,6 +809,8 @@ def employeeProfileView(request , pk):
     designations = Designation.objects.all()
     numeric_part = 0
     employee_documents = None
+    immigration_documents = None
+    bank_records = None
     
 
     # Handling GET request

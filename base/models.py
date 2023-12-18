@@ -117,6 +117,19 @@ class Employee(models.Model):
 
 class PersonalInformation(models.Model):
 
+    MARITAL_STATUS_CHOICES = (
+        ('Single' , 'Single'),
+        ('Married' , 'Married'),
+
+    )
+
+    CASTE_CATEGORY_CHOICES = (
+        ('General','General'),
+        ('SC','SC'),
+        ('ST','ST'),
+        ('OBC','OBC'),
+    )
+
     BLOOD_GROUP_CHOICES = (
         ('A+', 'A+'),
         ('A-', 'A-'),
@@ -134,16 +147,19 @@ class PersonalInformation(models.Model):
     mother_name = models.CharField(max_length=100,blank=True,null=True)
     mobile_no = models.CharField(max_length=10,unique=True,blank=True,null=True)
     blood_group = models.CharField(max_length=10,choices=BLOOD_GROUP_CHOICES,blank=True,null=True)
+    nationality = models.CharField(max_length=10,blank=True,null=True)
+    cast_category = models.CharField(choices=CASTE_CATEGORY_CHOICES,max_length=20,blank=True,null=True)
+    marital_status = models.CharField(choices=MARITAL_STATUS_CHOICES,max_length=20,blank=True,null=True)
+    aadhaar_card_no = models.CharField(max_length=12,null=True,blank=True,unique=True)
+    pancard_no = models.CharField(max_length=10,null=True,blank=True,unique=True)
     address = models.CharField(max_length=200,blank=True,null=True)
     tehsil = models.CharField(max_length=100,blank=True,null=True)
     district = models.CharField(max_length=100,blank=True,null=True)
     city = models.CharField(max_length=50,blank=True,null=True)
     state = models.CharField(max_length=50,choices=STATE_CHOICES,blank=True,null=True)
-    country = models.CharField(max_length=50,blank=True,null=True)
+    country =  CountryField(blank_label="select country",null=True,blank=True)
     pincode = models.CharField(max_length=10,blank=True,null=True)
-    nationality = models.CharField(max_length=10,blank=True,null=True)
-    cast_category = models.CharField(max_length=20,blank=True,null=True)
-    
+
 
     def __str__(self):
         return self.employee.user.username

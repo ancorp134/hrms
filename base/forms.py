@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-import string
+import string , re
 from django.forms import DateInput,FileInput
 from .constants import STATE_CHOICES
 
@@ -129,23 +129,48 @@ class PersonalInformationForm(forms.ModelForm):
             'father_name': forms.TextInput(attrs={'class': 'form-control'}),
             'mother_name': forms.TextInput(attrs={'class': 'form-control'}),
             'mobile_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'blood_group': forms.Select(choices=PersonalInformation.BLOOD_GROUP_CHOICES , attrs={'class': 'form-control'}),
+            'nationality': forms.TextInput(attrs={'class': 'form-control'}),
+            'cast_category': forms.Select(choices=PersonalInformation.CASTE_CATEGORY_CHOICES,attrs={'class': 'form-control'}),
+            'marital_status': forms.Select(choices=PersonalInformation.MARITAL_STATUS_CHOICES,attrs={'class': 'form-control'}),
+            'aadhaar_card_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'pancard_no': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'tehsil': forms.TextInput(attrs={'class': 'form-control'}),
             'district': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'country': forms.TextInput(attrs={'class': 'form-control'}),
-            'pincode': forms.TextInput(attrs={'class': 'form-control'}),
-            'nationality': forms.TextInput(attrs={'class': 'form-control'}),
-            'cast_category': forms.TextInput(attrs={'class': 'form-control'}),
             'state': forms.Select(choices=STATE_CHOICES , attrs={'class': 'form-control'}),
-            'blood_group': forms.Select(choices=PersonalInformation.BLOOD_GROUP_CHOICES , attrs={'class': 'form-control'}),
+            'country': forms.Select(attrs={'class': 'form-control'}),
+            'pincode': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
     def clean(self):
-        
-       
         cleaned_data = super().clean()
         special_characters = set(string.punctuation)
+
+        mobile_no = cleaned_data.get('mobile_no')
+        if mobile_no:
+            if not mobile_no.isdigit() or len(mobile_no) != 10:
+                self.add_error("mobile_no", "Mobile Number should contain exactly 10 digits and only numeric characters")
+
+        pincode = cleaned_data.get('pincode')
+        if pincode:
+            if not pincode.isdigit() or len(pincode) != 6:
+                self.add_error("pincode", "Pincode should contain exactly 6 digits and only numeric characters")
+
+        aadhaar_card_no = cleaned_data.get('aadhaar_card_no')
+        if aadhaar_card_no:
+            if not aadhaar_card_no.isdigit() or len(aadhaar_card_no) != 12:
+                self.add_error("aadhaar_card_no", "Aadhaar Number should contain exactly 12 digits and only numeric characters")
+
+        pancard_no = cleaned_data.get('pancard_no')
+        if pancard_no:
+            if not re.match(r'^[A-Z]{5}[0-9]{4}[A-Z]$', pancard_no):
+                self.add_error("pancard_no", "Enter a valid PAN card number (e.g., ABCDE1234F)")
+
+            if len(pancard_no) != 10:
+                self.add_error("pancard_no", "Pancard Number should contain exactly 10 digits")
+        
 
         fields_to_check = [
             'father_name',
@@ -154,26 +179,15 @@ class PersonalInformationForm(forms.ModelForm):
             'country',
             'nationality',
             'cast_category',
-            
+            'district',
+            'tehsil',
         ]
 
         for field in fields_to_check:
             field_value = cleaned_data.get(field)
-            
             if field_value:
                 # Check for numeric or special characters
                 if any(char.isdigit() or char in special_characters for char in field_value):
                     self.add_error(field, f"{field.replace('_', ' ').capitalize()} should not contain numeric or special characters.")
-                
-                # Additional specific validations (e.g., pincode length)
-                if field == 'pincode':
-                    if not field_value.isdigit() or len(field_value) != 6:
-                        self.add_error(field, "Please enter a valid 6-digit pincode.")
-                
-                # Check mobile number length
-                if field == 'mobile_no':
-                    cleaned_mobile_number = ''.join(filter(str.isdigit, field_value))
-                    if len(cleaned_mobile_number) != 10:
-                        self.add_error(field, "Mobile number should be exactly 10 digits long.")
-
+        
         return cleaned_data
