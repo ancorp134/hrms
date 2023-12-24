@@ -5,8 +5,8 @@
 * Website: https://github.com/alexis-luna/bootstrap-simple-admin-template
 -------------------------------------------------------------------*/
 #sidebar {
-    min-width: 190px;
-    max-width: 190px;
+    min-width: 245px;
+    max-width: 245px;
     background: #fff;
     color: #fff;
     transition: all 0.3s;
