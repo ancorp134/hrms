@@ -35,7 +35,7 @@ class BankDetailsSerializer(serializers.ModelSerializer):
 
 class AttendanceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = EmployeeAttendence
+        model = Attendance
         fields = '__all__'
 
 

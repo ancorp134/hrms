@@ -238,20 +238,24 @@ class BankDetails(models.Model):
     
 
 
-class EmployeeAttendence(models.Model):
+class Attendance(models.Model):
     id = models.CharField(max_length=25,primary_key=True,default=generate_unique_id,editable=False)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
-    in_Time = models.TimeField()
-    in_Date = models.DateField()
-    out_Time = models.TimeField()
-    out_Date = models.DateField()
+    in_Time = models.TimeField(blank=True,null=True)
+    out_Time = models.TimeField(blank=True,null=True)
+    date = models.DateField(blank=True,null=True)
     in_Location = models.CharField(max_length=200,null=True,blank=True)
     out_Location = models.CharField(max_length=200,null=True,blank=True)
-    month = models.PositiveSmallIntegerField(default=1)
-    year = models.PositiveSmallIntegerField(default=2023)
+    status = models.CharField(max_length=20,blank=True,null=True)
 
     def __str__(self):
         return f"{self.employee.user.username}'s Attendance" 
+    
+    @classmethod
+    def mark_attendance(cls, employee, date, status):
+        attendance, created = cls.objects.get_or_create(employee=employee, date=date)
+        attendance.status = status
+        attendance.save()
     
 
 class LeaveMaster(models.Model):
