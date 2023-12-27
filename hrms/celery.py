@@ -18,7 +18,7 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'mark-absentees-daily': {
         'task': 'base.tasks.mark_absentees',  # Update to match your actual task path
-        'schedule': crontab(minute=17, hour=12),  # Run daily at midnight
+        'schedule': crontab(minute=30, hour=10),  # Run daily at midnight
     },
 }
 

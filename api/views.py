@@ -6,6 +6,8 @@ from .serializer import *
 from base.models import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser
+from datetime import datetime
+
 
 class EmployeeLoginView(APIView):
     def post(self, request):
@@ -28,7 +30,7 @@ class EmployeeInfo(APIView):
             "bank_details": bank_data.data  # accessing the serialized data
         })
     
-class EmployeeAttendence(APIView):
+class EmployeeAttendance(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [JSONParser]
 
@@ -38,16 +40,30 @@ class EmployeeAttendence(APIView):
             employee = Employee.objects.get(user=request.user)
             
             # Include employee ID in the data sent for serializer validation
+            today = datetime.today().date()
             data = request.data.copy()
             data['employee'] = employee.id  # Assuming 'employee' is the ForeignKey in EmployeeAttendance
-        
-            serializer = AttendanceSerializer(data=data)
+                  
+            existing_attendance = Attendance.objects.filter(employee=employee, date=today).first()
+            if existing_attendance:
+                data['status'] = "Present" 
+                serializer = AttendanceSerializer(instance=existing_attendance, data=data)
+            else:
+                data['date'] = today
+                data['status'] = "Present"
+                serializer = AttendanceSerializer(data=data)
+            
+            
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         except Employee.DoesNotExist:
             return Response({"error": "Employee does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
         
 class LeaveApplicationView(APIView):
     permission_classes = [IsAuthenticated]
