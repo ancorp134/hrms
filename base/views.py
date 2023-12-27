@@ -491,7 +491,7 @@ def EmployeeView(request):
             
             employee_name = request.GET.get('employee_name')
             if employee_name:
-                employees = employees.filter(Q(first_name__icontains=employee_name) | Q(last_name__icontains=employee_name))
+                employees = employees.filter(Q(user__first_name__icontains=employee_name) | Q(user__last_name__icontains=employee_name))
             # Get the last employee code and extract numeric part for increment
             last_employee = Employee.objects.order_by('-employee_code').first()
             if last_employee:
